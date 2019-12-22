@@ -1,6 +1,8 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+#include <string>
+#include <vector>
 
 class vec3 {
     public: 
@@ -18,6 +20,7 @@ class vec3 {
 
         double mag();
         vec3 unit();
+        std::string to_string();
 };
 
 vec3 operator+(vec3 v1, vec3 v2);
@@ -30,7 +33,6 @@ vec3 operator/(vec3 v, double c);
 
 double dot(vec3 v1, vec3 v2);
 vec3 cross(vec3 v1, vec3 v2);
-void print_vec(vec3 v);
 
 
 
@@ -47,9 +49,9 @@ class Ray {
         Ray(vec3 origin, vec3 direction);
 
         vec3 at(double t);
-        vec3 trace(Surface** surfaces);
+        vec3 trace(std::vector<Surface*> *surfaces_array);
 
-        void print();
+        std::string to_string();
 };
 
 

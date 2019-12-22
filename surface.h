@@ -16,6 +16,4 @@ class Surface {
         virtual bool hit(Ray* ray) = 0;
 };
 
-
-
 #endif

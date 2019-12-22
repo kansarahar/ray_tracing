@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "vec3.h"
+#include "surface.h"
 
 
 
@@ -29,8 +30,11 @@ double vec3::mag() {
 }
 
 vec3 vec3::unit() {
-    double mag = this->mag();
-    return *this/mag;
+    return *this/this->mag();
+}
+
+std::string vec3::to_string() {
+    return "< " + std::to_string(this->a) + ", " + std::to_string(this->b) + ", " + std::to_string(this->c) + " >";
 }
     
 void vec3::operator+=(vec3 other) {
@@ -94,11 +98,18 @@ vec3 Ray::at(double t) {
     return this->origin + t*this->direction;
 }
 
-vec3 Ray::trace(Surface** surfaces) {
+vec3 Ray::trace(std::vector<Surface *> *surfaces_array) {
+    for (unsigned i = 0; i < surfaces_array->size(); i++) {
+        Surface *surface = (*surfaces_array)[i];
+        if (surface->hit(this)) {
+            if (this->hit_surface == nullptr || this->hit_surface->t > surface->t) {
+                this->hit_surface = surface;
+            }
+        }
+    }
     return vec3();
 }
 
-void Ray::print() {
-    print_vec(this->origin);
-    print_vec(this->direction);
+std::string Ray::to_string() {
+    return "origin: " + this->origin.to_string() + ", direction: " + this->direction.to_string();
 }

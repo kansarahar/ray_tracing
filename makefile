@@ -20,4 +20,4 @@ sphere.o: surface.h surfaces/sphere.cpp
 
 
 clean:
-	rm main *.o
+	del main *.o

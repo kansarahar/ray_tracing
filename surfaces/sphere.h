@@ -8,7 +8,7 @@ class Sphere: public Surface {
         vec3 center;
         double radius;
 
-        Sphere(vec3 center, double radius);
+        Sphere(vec3 center, double radius, vec3 color);
         
         ~Sphere();
 

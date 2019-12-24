@@ -11,8 +11,8 @@ class vec3 {
         double b;
         double c;
 
-        vec3(double a, double b, double c);
         vec3();
+        vec3(double a, double b, double c);
 
         void operator+=(vec3 other);
         void operator-=(vec3 other);
@@ -49,7 +49,7 @@ class Ray {
         Ray(vec3 origin, vec3 direction);
 
         vec3 at(double t);
-        vec3 trace(std::vector<Surface*> *surfaces_array);
+        void trace(std::vector<Surface *> &surfaces_array);
 
         std::string to_string();
 };

@@ -34,45 +34,7 @@ struct BitmapInfoHeader {
 
 #pragma pack(pop)
 
-void save_bmp(uint32_t width_px, uint32_t height_px, double*** image_arr) {
-    BitmapFileHeader bfh;
-    BitmapInfoHeader bih;
 
-    bih.bi_width = width_px;
-    bih.bi_height = height_px;
-
-    FILE *file = fopen("image.bmp", "wb");
-    if (!file) {
-        printf("Could not write file\n");
-        return;
-    }
-
-    /*Write headers*/
-    fwrite(&bfh, 1, sizeof(bfh), file);
-    fwrite(&bih, 1, sizeof(bih), file);
-
-    /*Write bitmap*/
-    for (int y = bih.bi_height-1; y>=0; y--) { /*Scanline loop backwards*/
-        for (int x = 0; x < bih.bi_width; x++) { /*Column loop forwards*/
-            /*compute some pixel values*/
-            unsigned char r = image_arr[y][x][0];
-            unsigned char g = image_arr[y][x][1];
-            unsigned char b = image_arr[y][x][2];
-            fwrite(&b, 1, 1, file);
-            fwrite(&g, 1, 1, file);
-            fwrite(&r, 1, 1, file);
-        }
-        int bytes_in_row = bih.bi_width*bih.bi_bit_count/8;
-        if (bytes_in_row%4 > 0) {
-            for (int i = 0; i < 4-bytes_in_row%4; i++) {
-                unsigned char zero = 0;
-                fwrite(&zero, 1, 1, file);
-            }
-        }
-    }
-    fclose(file);
-    return;
-}
 
 
 #endif

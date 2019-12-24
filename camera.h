@@ -1,7 +1,11 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+
+#include <string>
+
 #include "vec3.h"
+#include "bmp.h"
 
 
 class Screen {
@@ -9,12 +13,13 @@ class Screen {
         double width;
         double height;
         
-        int width_px;
-        int height_px;
+        unsigned width_px;
+        unsigned height_px;
 
         double resolution;
         double ***image_arr;
 
+        Screen();
         Screen(double width, double height, double resolution);
         ~Screen();
 };
@@ -26,7 +31,7 @@ class Camera {
         vec3 up;
         vec3 right;
         
-        Screen* screen;
+        Screen *screen;
 
         // resolution = pixels/unit_distance
         Camera(double screen_dist, double resolution=1);
@@ -36,7 +41,10 @@ class Camera {
         );
         ~Camera();
 
-        Ray generate_ray(int x_pixel, int y_pixel);
+        Ray generate_ray(unsigned screen_x_pixel, unsigned screen_y_pixel);
+
+        void saveBMP(std::string name);
+        void savePPM(std::string name);
 };
 
 

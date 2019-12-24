@@ -12,7 +12,7 @@ class Sphere: public Surface {
         
         ~Sphere();
 
-        bool hit(Ray* ray);
+        bool hit(Ray &ray);
 };
 
 

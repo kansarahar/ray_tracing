@@ -3,17 +3,18 @@
 
 #include "vec3.h"
 
+
 class Surface {
     public: 
-        Ray* normal;
+        Ray normal;
         double t;
         vec3 color;
 
         virtual ~Surface() {
-            delete normal;
+
         };
 
-        virtual bool hit(Ray* ray) = 0;
+        virtual bool hit(Ray &ray) = 0;
 };
 
 #endif

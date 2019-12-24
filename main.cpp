@@ -1,36 +1,63 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+
 #include <time.h>
 #include <vector>
 #include <string>
 
-#include "bmp.h"
-
 #include "vec3.h"
 #include "camera.h"
 #include "surfaces/sphere.h"
+#include "lights/point.h"
 
 using namespace std;
 
 int main() {
 
 
-    const int width = 100;
+    const int width = 200;
     const int height = 100;
 
-    double ***image_arr = new double**[height];
-    for (int i = 0; i < height; i++) {
-        image_arr[i] = new double*[width];
-        for (int j = 0; j < width; j++) {
-            image_arr[i][j] = new double[3];
-            image_arr[i][j][0] = 0;
-            image_arr[i][j][1] = 0;
-            image_arr[i][j][2] = 0;
+
+    Sphere* sphere = new Sphere(vec3(0, 0, -1000), 100, vec3(255,0,0));
+    Sphere* sphere2 = new Sphere(vec3(100, 0, -1000), 100, vec3(0,255,0));
+    Sphere* sphere3 = new Sphere(vec3(0, 100, -1000), 100, vec3(0,0,255));
+
+    PointLight* plight = new PointLight(vec3(0, 1000, 0), 1);
+    PointLight* plight2 = new PointLight(vec3(0, -1000, 0), 1);
+    PointLight* plight3 = new PointLight(vec3(-1000, 0, 0), 1);
+    std::vector<Surface *> spheres;
+    std::vector<Light *> lights;
+    spheres.push_back(sphere);
+    spheres.push_back(sphere2);
+    spheres.push_back(sphere3);
+    lights.push_back(plight);
+    // lights.push_back(plight2);
+    // lights.push_back(plight3);
+    
+    Camera camera(vec3(), vec3(0,0,-1), vec3(0,1,0), width, height, 200, 5);
+    for (unsigned k = 0; k < lights.size(); k++) {
+        Light* light = lights[k];
+        for (unsigned i = 0; i < camera.screen->height_px; i++) {
+            for (unsigned j = 0; j < camera.screen->width_px; j++) {
+                Ray ray = camera.generate_ray(j, i);
+                ray.trace(spheres);
+                if (ray.hit_surface != nullptr) {
+                    vec3 color = light->illuminate(ray, spheres);
+                    // vec3 color = ray.hit_surface->color;
+                    camera.screen->image_arr[i][j][0] += color.a;
+                    camera.screen->image_arr[i][j][1] += color.b;
+                    camera.screen->image_arr[i][j][2] += color.c;
+                }
+            }
         }
+
     }
 
-    save_bmp(width, height, image_arr);
+    camera.saveBMP("image.bmp");
+    camera.savePPM("image.ppm");
+
 
     // srand(time(NULL));
 
@@ -61,6 +88,6 @@ int main() {
     // int height = camera.screen->height_px;
     // camera.generate_ray(1,0).print();
 
-
+    return 0;
 };
 

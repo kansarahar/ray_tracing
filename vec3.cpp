@@ -4,17 +4,12 @@
 #include "surface.h"
 
 
+vec3::vec3(): a(0), b(0), c(0) {
 
-vec3::vec3(double a, double b, double c) {
-    this->a = a;
-    this->b = b;
-    this->c = c;
 }
 
-vec3::vec3() {
-    this->a = 0;
-    this->b = 0;
-    this->c = 0;
+vec3::vec3(double a, double b, double c): a(a), b(b), c(c) {
+
 }
 
 double dot(vec3 v1, vec3 v2) {
@@ -82,32 +77,27 @@ void print_vec(vec3 v) {
 }
 
 
-Ray::Ray() {
-    this->origin = vec3();
-    this->direction = vec3(0,0,-1);
-    this->hit_surface = nullptr;
+Ray::Ray(): origin(vec3()), direction(vec3(0,0,-1)), hit_surface(nullptr) {
+
 }
 
-Ray::Ray(vec3 origin, vec3 direction) {
-    this->origin = origin;
-    this->direction = direction;
-    this->hit_surface = nullptr;
+Ray::Ray(vec3 origin, vec3 direction): origin(origin), direction(direction), hit_surface(nullptr) {
+
 }
 
 vec3 Ray::at(double t) {
     return this->origin + t*this->direction;
 }
 
-vec3 Ray::trace(std::vector<Surface *> *surfaces_array) {
-    for (unsigned i = 0; i < surfaces_array->size(); i++) {
-        Surface *surface = (*surfaces_array)[i];
-        if (surface->hit(this)) {
+void Ray::trace(std::vector<Surface *> &surfaces_array) {
+    for (unsigned i = 0; i < surfaces_array.size(); i++) {
+        Surface *surface = surfaces_array[i];
+        if (surface->hit(*this)) {
             if (this->hit_surface == nullptr || this->hit_surface->t > surface->t) {
                 this->hit_surface = surface;
             }
         }
     }
-    return vec3();
 }
 
 std::string Ray::to_string() {

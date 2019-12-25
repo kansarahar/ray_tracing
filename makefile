@@ -24,4 +24,4 @@ pointlight.o: light.h lights/point.cpp
 
 
 clean:
-	del main *.o
+	del main.exe *.o *.bmp *.ppm

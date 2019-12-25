@@ -1,4 +1,3 @@
-#include <cmath>
 #include "sphere.h"
 
 Sphere::Sphere(vec3 center, double radius, vec3 color): center(center), radius(radius) {

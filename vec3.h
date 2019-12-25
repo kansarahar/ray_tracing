@@ -14,25 +14,29 @@ class vec3 {
         vec3();
         vec3(double a, double b, double c);
 
-        void operator+=(vec3 other);
-        void operator-=(vec3 other);
-        void operator*=(vec3 other);
+        inline void operator+=(const vec3 &other) { this->a += other.a; this->b += other.b; this->c += other.c; };
+        inline void operator-=(const vec3 &other) { this->a -= other.a; this->b -= other.b; this->c -= other.c; };
+        inline void operator*=(const vec3 &other) { this->a *= other.a; this->b *= other.b; this->c *= other.c; };
 
         double mag();
         vec3 unit();
         std::string to_string();
 };
 
-vec3 operator+(vec3 v1, vec3 v2);
-vec3 operator-(vec3 v1, vec3 v2);
-vec3 operator*(vec3 v1, vec3 v2);
+inline vec3 operator+(const vec3 &v1, const vec3 &v2) { return vec3(v1.a+v2.a, v1.b+v2.b, v1.c+v2.c); };
+inline vec3 operator-(const vec3 &v1, const vec3 &v2) { return vec3(v1.a-v2.a, v1.b-v2.b, v1.c-v2.c); };
+inline vec3 operator*(const vec3 &v1, const vec3 &v2) { return vec3(v1.a*v2.a, v1.b*v2.b, v1.c*v2.c); };
 
-vec3 operator*(double c, vec3 v);
-vec3 operator*(vec3 v, double c);
-vec3 operator/(vec3 v, double c);
+inline vec3 operator*(double c, const vec3 &v) { return vec3(v.a*c, v.b*c, v.c*c); };
+inline vec3 operator*(const vec3 &v, double c) { return vec3(v.a*c, v.b*c, v.c*c); };
+inline vec3 operator/(const vec3 &v, double c) { return vec3(v.a/c, v.b/c, v.c/c); };
 
-double dot(vec3 v1, vec3 v2);
-vec3 cross(vec3 v1, vec3 v2);
+inline double dot(const vec3 &v1, const vec3 &v2) {
+    return v1.a*v2.a + v1.b*v2.b + v1.c*v2.c;
+};
+inline vec3 cross(const vec3 &v1, const vec3 &v2) { 
+    return vec3(v1.b*v2.c-v1.c*v2.b, v1.c*v2.a-v1.a*v2.c, v1.a*v2.b-v1.b*v2.a);
+};
 
 
 
@@ -48,7 +52,7 @@ class Ray {
         Ray();
         Ray(vec3 origin, vec3 direction);
 
-        vec3 at(double t);
+        inline vec3 at(double t) { return this->origin + t*this->direction; };
         void trace(std::vector<Surface *> &surfaces_array);
 
         std::string to_string();

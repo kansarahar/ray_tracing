@@ -1,6 +1,8 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
+#include <cmath>
+
 #include "vec3.h"
 
 

@@ -42,7 +42,7 @@ void Ray::trace(std::vector<Surface *> &surfaces_array) {
     for (unsigned i = 0; i < surfaces_array.size(); i++) {
         Surface *surface = surfaces_array[i];
         if (surface->hit(*this)) {
-            if (this->hit_surface == nullptr || this->hit_surface->t > surface->t) {
+            if (this->hit_surface == nullptr || this->hit_surface->t() > surface->t()) {
                 this->hit_surface = surface;
             }
         }

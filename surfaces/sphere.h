@@ -5,14 +5,16 @@
 
 class Sphere: public Surface {
     public: 
-        vec3 center;
-        double radius;
 
         Sphere(vec3 center, double radius, vec3 color);
-        
         ~Sphere();
 
         bool hit(Ray &ray);
+
+    private:
+        vec3 _center;
+        double _radius;
+
 };
 
 

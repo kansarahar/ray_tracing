@@ -26,18 +26,14 @@ int main() {
     Sphere* sphere3 = new Sphere(vec3(0, 100, -1000), 100, vec3(0,0,255));
 
     PointLight* plight = new PointLight(vec3(0, 1000, 0), 1);
-    PointLight* plight2 = new PointLight(vec3(0, -1000, 0), 1);
-    PointLight* plight3 = new PointLight(vec3(-1000, 0, 0), 1);
     vector<Surface *> spheres;
     vector<Light *> lights;
     spheres.push_back(sphere);
     spheres.push_back(sphere2);
     spheres.push_back(sphere3);
     lights.push_back(plight);
-    // lights.push_back(plight2);
-    // lights.push_back(plight3);
     
-    Camera camera(vec3(), vec3(0,0,-1), vec3(0,1,0), width, height, 200, 10);
+    Camera camera(vec3(), vec3(0,0,-1), vec3(0,1,0), width, height, 200, 5);
     for (unsigned k = 0; k < lights.size(); k++) {
         Light* light = lights[k];
         for (unsigned i = 0; i < camera.screen->height_px; i++) {
@@ -56,13 +52,9 @@ int main() {
     }
 
     camera.saveBMP("image.bmp");
-
     clock_t end = clock();
 
-    cout << end-begin << endl;
-
-
-
+    cout << "time elapsed: " << (end-begin)/1000.0 << endl;
 
     // srand(time(NULL));
 

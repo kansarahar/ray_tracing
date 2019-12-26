@@ -2,13 +2,11 @@
 
 Sphere::Sphere(vec3 center, double radius, vec3 color): _center(center), _radius(radius) {
     this->_t = 0;
-    this->_normal = Ray();
+    this->_normal = vec3();
     this->_color = color;
 }
 
-Sphere::~Sphere() {
-    
-}
+Sphere::~Sphere() { }
 
 
 bool Sphere::hit(Ray &ray) {
@@ -27,7 +25,7 @@ bool Sphere::hit(Ray &ray) {
             }
         }
         this->_t = t;
-        this->_normal = Ray(ray.at(_t), ray.at(_t)-this->_center);
+        this->_normal = ray.at(_t)-this->_center;
         return true;
     }
     return false;

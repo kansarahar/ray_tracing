@@ -10,9 +10,7 @@ class Light {
     public: 
         double intensity;
 
-        virtual ~Light() {
-
-        };
+        virtual ~Light() { };
 
         virtual vec3 illuminate(Ray &source_ray, std::vector<Surface *>) = 0;
 };

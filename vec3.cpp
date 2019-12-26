@@ -4,13 +4,9 @@
 #include "surface.h"
 
 
-vec3::vec3(): a(0), b(0), c(0) {
+vec3::vec3(): a(0), b(0), c(0) { }
 
-}
-
-vec3::vec3(double a, double b, double c): a(a), b(b), c(c) {
-
-}
+vec3::vec3(double a, double b, double c): a(a), b(b), c(c) { }
 
 double vec3::mag() {
     return sqrt(dot(*this, *this));
@@ -30,13 +26,9 @@ void print_vec(vec3 v) {
 }
 
 
-Ray::Ray(): origin(vec3()), direction(vec3(0,0,-1)), hit_surface(nullptr) {
+Ray::Ray(): origin(vec3()), direction(vec3(0,0,-1)), hit_surface(nullptr) { }
 
-}
-
-Ray::Ray(vec3 origin, vec3 direction): origin(origin), direction(direction), hit_surface(nullptr) {
-
-}
+Ray::Ray(vec3 origin, vec3 direction): origin(origin), direction(direction), hit_surface(nullptr) { }
 
 void Ray::trace(std::vector<Surface *> &surfaces_array) {
     for (unsigned i = 0; i < surfaces_array.size(); i++) {

@@ -10,6 +10,7 @@
 #include "vec3.h"
 #include "camera.h"
 #include "surfaces/sphere.h"
+#include "surfaces/plane.h"
 #include "lights/point.h"
 
 using namespace std;
@@ -21,19 +22,22 @@ int main() {
     const int height = 100;
 
 
-    Sphere* sphere = new Sphere(vec3(0, 0, -1000), 100, vec3(255,0,0));
-    Sphere* sphere2 = new Sphere(vec3(100, 0, -1000), 100, vec3(0,255,0));
-    Sphere* sphere3 = new Sphere(vec3(0, 100, -1000), 100, vec3(0,0,255));
+    Sphere* sphere = new Sphere(vec3(0, 0, -440), 30, vec3(255,0,0));
+    Sphere* sphere2 = new Sphere(vec3(50, 0, -440), 30, vec3(0,255,0));
+    Sphere* sphere3 = new Sphere(vec3(0, 0, -300), 30, vec3(0,0,255));
+    Plane* plane1 = new Plane(vec3(), vec3(0,1,0), vec3(250, 0, 250));
 
     PointLight* plight = new PointLight(vec3(0, 1000, 0), 1);
     vector<Surface *> spheres;
     vector<Light *> lights;
-    spheres.push_back(sphere);
-    spheres.push_back(sphere2);
+    // spheres.push_back(sphere);
+    // spheres.push_back(sphere2);
     spheres.push_back(sphere3);
+    spheres.push_back(plane1);
     lights.push_back(plight);
     
     Camera camera(vec3(), vec3(0,0,-1), vec3(0,1,0), width, height, 200, 5);
+    // Camera camera(vec3(0, 100, 0), vec3(0,-100,-1440), vec3(0,1440,-100), width, height, 200, 5);
     for (unsigned k = 0; k < lights.size(); k++) {
         Light* light = lights[k];
         for (unsigned i = 0; i < camera.screen->height_px; i++) {

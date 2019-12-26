@@ -16,13 +16,13 @@ class Surface {
         virtual bool hit(Ray &ray) = 0;
 
         inline double t() { return this->_t; };
-        inline Ray normal() { return this->_normal; };
+        inline vec3 normal() { return this->_normal; };
         inline virtual vec3 color() { return this->_color; };
 
 
     protected: 
         double _t;
-        Ray _normal;
+        vec3 _normal;
         vec3 _color;
 };
 

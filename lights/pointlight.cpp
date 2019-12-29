@@ -15,7 +15,7 @@ PointLight::~PointLight() { }
 vec3 PointLight::illuminate(Ray &source_ray, const std::vector<Surface *> &surfaces) {
     if (source_ray.hit_surface == nullptr) { return vec3(); }
     vec3 hit_point = source_ray.at(source_ray.hit_surface->t()*0.999999);
-    Ray shadow_ray = Ray(hit_point, this->center-hit_point);
+    Ray shadow_ray = Ray(hit_point, (this->center-hit_point).unit());
     shadow_ray.trace(surfaces);
     if (shadow_ray.hit_surface == nullptr || shadow_ray.hit_surface->t() >= 1) {
         vec3 pixel_color = source_ray.hit_surface->color()*this->intensity*dot(shadow_ray.direction.unit(), source_ray.hit_surface->normal().unit());

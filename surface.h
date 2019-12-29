@@ -17,6 +17,8 @@ class Surface {
         inline vec3 normal() { return this->_normal; };
         inline virtual vec3 color() { return this->_color; };
 
+        virtual void translateSelf(const vec3 &translation) = 0;
+        virtual void rotateSelf(const vec3 &axis, double angle) = 0;
 
 
     protected: 

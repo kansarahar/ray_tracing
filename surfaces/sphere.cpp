@@ -29,6 +29,14 @@ bool Sphere::hit(Ray &ray) {
         return true;
     }
     return false;
-};
+}
 
+void Sphere::translateSelf(const vec3 &translation) {
+    this->_center.translate(translation);
+}
 
+void Sphere::rotateSelf(const vec3 &axis, double angle) {
+    this->_up.rotate(axis, angle);
+    this->_right.rotate(axis, angle);
+    this->_cross.rotate(axis, angle);
+}

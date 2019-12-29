@@ -6,11 +6,13 @@
 class Plane: public Surface {
     public: 
 
-        Plane(vec3 point, vec3 normal, vec3 color);
-        Plane(vec3 point1, vec3 point2, vec3 point3, vec3 color);
+        Plane(vec3 point, vec3 color);
+
         ~Plane();
 
         bool hit(Ray &ray);
+        void translateSelf(const vec3 &translation);
+        void rotateSelf(const vec3 &axis, double angle);
 
     private:
         vec3 _point;

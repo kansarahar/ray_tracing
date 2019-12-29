@@ -24,10 +24,10 @@ int main() {
     Sphere* sphere2 = new Sphere(vec3(50, 440, 0), 30, vec3(0,255,0));
     Sphere* sphere3 = new Sphere(vec3(0, 440, 50), 30, vec3(0,0,255));
     Sphere* sphere4 = new Sphere(vec3(-500, 1000, 250), 30, vec3(255,255,0));
-    Plane* plane1 = new Plane(vec3(0,0,-50), vec3(0,0,1), vec3(150, 150, 150));
+    Plane* plane1 = new Plane(vec3(0,0,-50), vec3(150, 150, 150));
 
-    PointLight* plight = new PointLight(vec3(0, 100, 0), 1);
-    DirectionalLight *dlight = new DirectionalLight(vec3(1,0,-1), 0.8);
+    PointLight* plight = new PointLight(vec3(0, 100, 0), 0.7);
+    DirectionalLight *dlight = new DirectionalLight(vec3(1,0,-1), 0.1);
     AmbientLight *alight = new AmbientLight(0.2);
     vector<Surface *> spheres;
     vector<Light *> lights;
@@ -36,10 +36,12 @@ int main() {
     spheres.push_back(sphere3);
     spheres.push_back(sphere4);
     spheres.push_back(plane1);
+    lights.push_back(plight);
     lights.push_back(dlight);
     lights.push_back(alight);
-    
-    Camera camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 2);
+
+
+    Camera camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 5);
     // Camera camera(vec3(0, 100, 0), vec3(0,-100,-1440), vec3(0,1440,-100), width, height, 200, 5);
     for (unsigned k = 0; k < lights.size(); k++) {
         Light* light = lights[k];

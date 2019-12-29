@@ -10,6 +10,8 @@ class Sphere: public Surface {
         ~Sphere();
 
         bool hit(Ray &ray);
+        void translateSelf(const vec3 &translation);
+        void rotateSelf(const vec3 &axis, double angle);
 
     private:
         vec3 _center;

@@ -1,17 +1,15 @@
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+#include "stdlib.h"
 
-#include <time.h>
-#include <vector>
-#include <string>
-#include <ctime>
+#include "time.h"
 
-#include "vec3.h"
 #include "camera.h"
 #include "surfaces/sphere.h"
 #include "surfaces/plane.h"
-#include "lights/point.h"
+#include "lights/pointlight.h"
+#include "lights/directionallight.h"
+#include "lights/ambientlight.h"
 
 using namespace std;
 
@@ -22,27 +20,32 @@ int main() {
     const int height = 100;
 
 
-    Sphere* sphere = new Sphere(vec3(0, 0, -440), 30, vec3(255,0,0));
-    Sphere* sphere2 = new Sphere(vec3(50, 0, -440), 30, vec3(0,255,0));
-    Sphere* sphere3 = new Sphere(vec3(0, 0, -300), 30, vec3(0,0,255));
-    Plane* plane1 = new Plane(vec3(), vec3(0,1,0), vec3(250, 0, 250));
+    Sphere* sphere = new Sphere(vec3(0, 440, 0), 30, vec3(255,0,0));
+    Sphere* sphere2 = new Sphere(vec3(50, 440, 0), 30, vec3(0,255,0));
+    Sphere* sphere3 = new Sphere(vec3(0, 440, 50), 30, vec3(0,0,255));
+    Sphere* sphere4 = new Sphere(vec3(-500, 1000, 250), 30, vec3(255,255,0));
+    Plane* plane1 = new Plane(vec3(0,0,-50), vec3(0,0,1), vec3(150, 150, 150));
 
-    PointLight* plight = new PointLight(vec3(0, 1000, 0), 1);
+    PointLight* plight = new PointLight(vec3(0, 100, 0), 1);
+    DirectionalLight *dlight = new DirectionalLight(vec3(1,0,-1), 0.8);
+    AmbientLight *alight = new AmbientLight(0.2);
     vector<Surface *> spheres;
     vector<Light *> lights;
-    // spheres.push_back(sphere);
-    // spheres.push_back(sphere2);
+    spheres.push_back(sphere);
+    spheres.push_back(sphere2);
     spheres.push_back(sphere3);
+    spheres.push_back(sphere4);
     spheres.push_back(plane1);
-    lights.push_back(plight);
+    lights.push_back(dlight);
+    lights.push_back(alight);
     
-    Camera camera(vec3(), vec3(0,0,-1), vec3(0,1,0), width, height, 200, 5);
+    Camera camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 2);
     // Camera camera(vec3(0, 100, 0), vec3(0,-100,-1440), vec3(0,1440,-100), width, height, 200, 5);
     for (unsigned k = 0; k < lights.size(); k++) {
         Light* light = lights[k];
         for (unsigned i = 0; i < camera.screen->height_px; i++) {
             for (unsigned j = 0; j < camera.screen->width_px; j++) {
-                Ray ray = camera.generate_ray(j, i);
+                Ray ray = camera.castRay(j, i);
                 ray.trace(spheres);
                 if (ray.hit_surface != nullptr) {
                     vec3 color = light->illuminate(ray, spheres);
@@ -52,43 +55,15 @@ int main() {
                 }
             }
         }
-
     }
+
 
     camera.saveBMP("image.bmp");
     clock_t end = clock();
 
     cout << "time elapsed: " << (end-begin)/1000.0 << endl;
 
-    // srand(time(NULL));
-
-    // ofstream image;
-    // image.open ("image.ppm"); 
-    // if (image.is_open()) {
-    //     image << "P3\n";
-    //     image << "255 100\n";
-    //     image << "255\n\n";
-    //     for (int i = 0; i < height; i++) {
-    //         for (int j = 0; j < width; j++) {
-    //             image << int(image_arr[i][j][0]) << " " << int(image_arr[i][j][1]) << " " << int(image_arr[i][j][2]) << "\n";
-    //         }
-    //     }
-    //     image.close();
-    // }
-    // else {
-    //     cout << "unable to open file";
-    // }
-
     
-
-
-
-    // Camera camera(vec3(), vec3(0,0,1), vec3(0,1,0),
-    //     200, 100, 200, 1.7
-    // );
-    // int height = camera.screen->height_px;
-    // camera.generate_ray(1,0).print();
-
     return 0;
 };
 

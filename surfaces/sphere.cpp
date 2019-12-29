@@ -13,7 +13,7 @@ bool Sphere::hit(Ray &ray) {
     double a = dot(ray.direction, ray.direction);
     double b = 2*dot(ray.direction, ray.origin - this->_center);
     double c = dot(ray.origin, ray.origin) + dot(this->_center, this->_center)
-                -2*(dot(ray.origin, this->_center)) - (this->_radius)*(this->_radius);
+                - 2*(dot(ray.origin, this->_center)) - (this->_radius)*(this->_radius);
     double k = b*b - 4*a*c;
     if (k > 0) {
         k = sqrt(k);

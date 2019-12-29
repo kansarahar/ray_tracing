@@ -5,8 +5,6 @@
 #define __REFLECTIVE__ 1
 #define __REFRACTIVE__ 2
 
-#include <cmath>
-
 #include "vec3.h"
 
 
@@ -20,10 +18,16 @@ class Surface {
         inline virtual vec3 color() { return this->_color; };
 
 
+
     protected: 
         double _t;
         vec3 _normal;
         vec3 _color;
+
+        // basis vectors for surface
+        vec3 _up;
+        vec3 _right;
+        vec3 _cross;
 };
 
 #endif

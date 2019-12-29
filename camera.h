@@ -1,9 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-
-#include <string>
-
 #include "vec3.h"
 #include "bmp.h"
 
@@ -41,7 +38,7 @@ class Camera {
         );
         ~Camera();
 
-        Ray generate_ray(unsigned screen_x_pixel, unsigned screen_y_pixel);
+        Ray castRay(unsigned screen_x_pixel, unsigned screen_y_pixel);
 
         void saveBMP(std::string name);
         void savePPM(std::string name);

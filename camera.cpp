@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <iostream>
 
 Screen::Screen(): width(200), height(100), resolution(1) {
     this->width_px = unsigned(width*resolution);
@@ -8,7 +9,7 @@ Screen::Screen(): width(200), height(100), resolution(1) {
     for (unsigned i = 0; i < height_px; i++) {
         image_arr[i] = new double*[width_px];
         for (unsigned j = 0; j < width_px; j++) {
-            image_arr[i][j] = new double[3];
+            image_arr[i][j] = new double[3] {0,0,0};
         }
     }
 }
@@ -21,7 +22,7 @@ Screen::Screen(double width, double height, double resolution): width(width), he
     for (unsigned i = 0; i < height_px; i++) {
         image_arr[i] = new double*[width_px];
         for (unsigned j = 0; j < width_px; j++) {
-            image_arr[i][j] = new double[3];
+            image_arr[i][j] = new double[3] {0,0,0};
         }
     }
 }
@@ -38,8 +39,8 @@ Screen::~Screen() {
 
 Camera::Camera(double screen_dist, double resolution) {
     this->center = vec3();
-    this->lookat = screen_dist*vec3(0,0,-1);
-    this->up = vec3(0,1,0);
+    this->lookat = screen_dist*vec3(0,1,0);
+    this->up = vec3(0,0,1);
     this->right = vec3(1,0,0);
 
     this->screen = new Screen(200, 100, resolution);
@@ -56,14 +57,12 @@ Camera::Camera(vec3 center, vec3 lookat, vec3 up, double screen_width, double sc
     this->screen = new Screen(screen_width, screen_height, resolution);
 }
 
-Camera::~Camera() {
+Camera::~Camera() { }
 
-}
-
-Ray Camera::generate_ray(unsigned screen_x_pixel, unsigned screen_y_pixel) {
+Ray Camera::castRay(unsigned screen_x_pixel, unsigned screen_y_pixel) {
     // resolution = pixels / unit length
-    double x_dist = (double(screen_x_pixel)-double(this->screen->width_px)/2)/this->screen->resolution;
-    double y_dist = (double(screen_y_pixel)-double(this->screen->height_px)/2)/this->screen->resolution;
+    double x_dist = (screen_x_pixel-this->screen->width_px/2.0)/this->screen->resolution;
+    double y_dist = (this->screen->height_px/2.0-screen_y_pixel)/this->screen->resolution;
 
     return Ray(this->center, this->lookat+this->right*x_dist+this->up*y_dist);
 }
@@ -92,9 +91,12 @@ void Camera::saveBMP(std::string name) {
     fwrite(&bih, 1, sizeof(bih), file);
 
     /*Write bitmap*/
-    for (unsigned y = 0; y < bih.bi_height; y++) { 
-        for (unsigned x = 0; x < bih.bi_width; x++) { 
+    for (int y = bih.bi_height-1; y >= 0; y--) { 
+        for (int x = 0; x < int(bih.bi_width); x++) { 
 
+            if (image_arr[y][x][0] < 0) { image_arr[y][x][0] = 0.0; }
+            if (image_arr[y][x][1] < 0) { image_arr[y][x][1] = 0.0; }
+            if (image_arr[y][x][2] < 0) { image_arr[y][x][2] = 0.0; }
             if (image_arr[y][x][0] > 255) { image_arr[y][x][0] = 255; }
             if (image_arr[y][x][1] > 255) { image_arr[y][x][1] = 255; }
             if (image_arr[y][x][2] > 255) { image_arr[y][x][2] = 255; }
@@ -103,6 +105,7 @@ void Camera::saveBMP(std::string name) {
             unsigned char r = image_arr[y][x][0];
             unsigned char g = image_arr[y][x][1];
             unsigned char b = image_arr[y][x][2];
+
             fwrite(&b, 1, 1, file);
             fwrite(&g, 1, 1, file);
             fwrite(&r, 1, 1, file);

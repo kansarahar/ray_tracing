@@ -2,9 +2,9 @@
 #define BMP_H
 
 #include <iostream>
-#include <stdint.h>
 #include <fstream>
 #include <string>
+#include "stdint.h"
 
 using namespace std;
 

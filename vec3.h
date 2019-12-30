@@ -27,7 +27,8 @@ class vec3 {
         vec3 unit() const;
 
         inline void translate(const vec3 &translation) { *this += translation; };
-        void rotate(const vec3 &axis, double theta);
+        void rotate(const vec3 &point, const vec3 &axis, double theta);  // rotate about axis through arbitrary point
+        void rotate(const vec3 &axis, double theta);  // rotate about axis through origin
 
         std::string to_string();
 };

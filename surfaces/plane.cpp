@@ -1,13 +1,23 @@
 #include "plane.h"
 
-Plane::Plane(vec3 point, vec3 color): _point(point) {
+Plane::Plane(vec3 point, vec3 normal, vec3 color): _point(point) {
     this->_t = 0;
     this->_color = color;
-    this->_normal = vec3(0,0,1);
+    this->_normal = normal.unit();
 
-    this->_up = vec3(0,0,1);
+    // ensure that basis vectors are orthogonal
+    this->_up = this->_normal;
     this->_right = vec3(1,0,0);
-    this->_cross = vec3(0,1,0);
+    if (cross(this->_up, this->_right).mag() < 1e-10) {
+        this->_normal = vec3(1,0,0);
+        this->_up = vec3(1,0,0);
+        this->_right = vec3(0,0,-1);
+        this->_cross = vec3(0,1,0);
+    }
+    else {
+        this->_cross = cross(this->_up, this->_right).unit();
+        this->_right = cross(this->_cross, this->_up);
+    }
 
 }
 
@@ -36,4 +46,9 @@ void Plane::rotateSelf(const vec3 &axis, double angle) {
     this->_up.rotate(axis, angle);
     this->_right.rotate(axis, angle);
     this->_cross.rotate(axis, angle);
+}
+
+void Plane::rotate(const vec3 &point, const vec3 &axis, double angle) {
+    this->_point.rotate(point, axis, angle);
+    this->rotateSelf(axis, angle);
 }

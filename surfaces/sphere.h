@@ -12,6 +12,7 @@ class Sphere: public Surface {
         bool hit(Ray &ray);
         void translateSelf(const vec3 &translation);
         void rotateSelf(const vec3 &axis, double angle);
+        void rotate(const vec3 &point, const vec3 &axis, double angle);
 
     private:
         vec3 _center;

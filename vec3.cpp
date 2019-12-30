@@ -12,6 +12,11 @@ void vec3::rotate(const vec3 &axis, double theta) {
     quaternion q(cos(theta*M_PI/360), sin(theta*M_PI/360)*axis.unit());
     *this = (q*quaternion(0, *this)*q.conj()).v;
 };
+void vec3::rotate(const vec3 &point, const vec3 &axis, double theta) {
+    this->translate(-1*point);
+    this->rotate(axis, theta);
+    this->translate(point);
+}
 
 std::string vec3::to_string() { return "< " + std::to_string(this->a) + ", " + std::to_string(this->b) + ", " + std::to_string(this->c) + " >"; };
 

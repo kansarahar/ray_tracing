@@ -40,3 +40,8 @@ void Sphere::rotateSelf(const vec3 &axis, double angle) {
     this->_right.rotate(axis, angle);
     this->_cross.rotate(axis, angle);
 }
+
+void Sphere::rotate(const vec3 &point, const vec3 &axis, double angle) {
+    this->_center.rotate(point, axis, angle);
+    this->rotateSelf(axis, angle);
+}

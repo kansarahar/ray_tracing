@@ -19,6 +19,7 @@ class Surface {
 
         virtual void translateSelf(const vec3 &translation) = 0;
         virtual void rotateSelf(const vec3 &axis, double angle) = 0;
+        virtual void rotate(const vec3 &point, const vec3 &axis, double angle) = 0;
 
 
     protected: 

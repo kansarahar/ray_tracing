@@ -1,15 +1,15 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
-#define __DIFFUSE__  0
-#define __REFLECTIVE__ 1
-#define __REFRACTIVE__ 2
-
 #include "vec3.h"
+#include "material.h"
 
 
 class Surface {
     public: 
+
+        Material *material;
+
         virtual ~Surface() { };
         virtual bool hit(Ray &ray) = 0;
 
@@ -38,5 +38,6 @@ class Surface {
         bool _textured;
         vec3 (*_texture_function)(double, double);
 };
+
 
 #endif

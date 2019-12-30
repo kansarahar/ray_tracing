@@ -4,12 +4,7 @@
 
 #include "time.h"
 
-#include "camera.h"
-#include "surfaces/sphere.h"
-#include "surfaces/plane.h"
-#include "lights/pointlight.h"
-#include "lights/directionallight.h"
-#include "lights/ambientlight.h"
+#include "scene.h"
 
 using namespace std;
 
@@ -19,6 +14,10 @@ int main() {
     clock_t begin = clock();  
     const int width = 200;
     const int height = 100;
+
+    Camera *camera = new Camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 5);
+    // Camera camera(vec3(0, 100, 0), vec3(0,-100,-1440), vec3(0,1440,-100), width, height, 200, 5);
+    
 
 
     Sphere* sphere = new Sphere(vec3(0, 440, 0), 30, vec3(255,0,0));
@@ -30,16 +29,16 @@ int main() {
     PointLight* plight = new PointLight(vec3(-20, 100, 0), 0.7);
     DirectionalLight *dlight = new DirectionalLight(vec3(1,0,-1), 0.1);
     AmbientLight *alight = new AmbientLight(.1);
-    vector<Surface *> spheres;
-    vector<Light *> lights;
-    spheres.push_back(sphere);
-    spheres.push_back(sphere2);
-    spheres.push_back(sphere3);
-    spheres.push_back(sphere4);
-    spheres.push_back(plane1);
-    lights.push_back(plight);
-    lights.push_back(dlight);
-    lights.push_back(alight);
+
+    Scene scene(camera);
+    scene.addSurface(sphere);
+    scene.addSurface(sphere2);
+    scene.addSurface(sphere3);
+    scene.addSurface(sphere4);
+    scene.addSurface(plane1);
+    scene.addLight(plight);
+    scene.addLight(dlight);
+    scene.addLight(alight);
 
     // plane1->rotate(vec3(0,0,0), vec3(0,1,0), 20);
     // plane1->rotateSelf(vec3(0,1,0), 180);
@@ -47,27 +46,7 @@ int main() {
     sphere2->rotateSelf(vec3(1,1,1),45);
     plane1->texture();
 
-
-    Camera camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 5);
-    // Camera camera(vec3(0, 100, 0), vec3(0,-100,-1440), vec3(0,1440,-100), width, height, 200, 5);
-    for (unsigned k = 0; k < lights.size(); k++) {
-        Light* light = lights[k];
-        for (unsigned i = 0; i < camera.screen->height_px; i++) {
-            for (unsigned j = 0; j < camera.screen->width_px; j++) {
-                Ray ray = camera.castRay(j, i);
-                ray.trace(spheres);
-                if (ray.hit_surface != nullptr) {
-                    vec3 color = light->illuminate(ray, spheres);
-                    camera.screen->image_arr[i][j][0] += color.a;
-                    camera.screen->image_arr[i][j][1] += color.b;
-                    camera.screen->image_arr[i][j][2] += color.c;
-                }
-            }
-        }
-    }
-
-
-    camera.saveBMP("image.bmp");
+    scene.render(1, "image.bmp");
     clock_t end = clock();
 
     cout << "time elapsed: " << (end-begin)/1000.0 << endl;

@@ -3,8 +3,8 @@ CXX = g++
 
 CXXFLAGS = -Wall -g
 
-main: main.o vec3.o camera.o sphere.o plane.o pointlight.o directionallight.o ambientlight.o
-	$(CXX) $(CXXFLAGS) main.o vec3.o camera.o sphere.o plane.o pointlight.o directionallight.o ambientlight.o -o main
+main: main.o vec3.o camera.o sphere.o plane.o pointlight.o directionallight.o ambientlight.o scene.o
+	$(CXX) $(CXXFLAGS) main.o vec3.o camera.o sphere.o plane.o pointlight.o directionallight.o ambientlight.o scene.o -o main
 
 main.o: main.cpp
 	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
@@ -30,5 +30,7 @@ directionallight.o: light.h lights/directionallight.h lights/directionallight.cp
 ambientlight.o: light.h lights/ambientlight.h lights/ambientlight.cpp
 	$(CXX) $(CXXFLAGS) -c lights/ambientlight.cpp -o ambientlight.o
 
+scene.o: scene.h scene.cpp 
+	$(CXX) $(CXXFLAGS) -c scene.cpp -o scene.o
 clean:
 	del main.exe *.o *.bmp *.ppm

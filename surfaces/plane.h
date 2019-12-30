@@ -15,6 +15,10 @@ class Plane: public Surface {
         void rotateSelf(const vec3 &axis, double angle);
         void rotate(const vec3 &point, const vec3 &axis, double angle);
 
+        void texture();
+        void texture(vec3 (*texture_function)(double x, double y));
+
+
     private:
         vec3 _point;
 

@@ -16,7 +16,7 @@ Sphere::Sphere(vec3 center, double radius, vec3 color): _center(center), _radius
     this->_right = vec3(1,0,0);
     this->_cross = vec3(0,1,0);
 
-    this->_textured = true;
+    this->_textured = false;
     this->_texture_function = defaultSphereTexture;
 }
 
@@ -66,4 +66,13 @@ void Sphere::rotateSelf(const vec3 &axis, double angle) {
 void Sphere::rotate(const vec3 &point, const vec3 &axis, double angle) {
     this->_center.rotate(point, axis, angle);
     this->rotateSelf(axis, angle);
+}
+
+void Sphere::texture() {
+    this->_textured = true;
+}
+
+void Sphere::texture(vec3 (*texture_function)(double azimuthal_angle, double polar_angle)) {
+    this->_textured = true;
+    this->_texture_function = texture_function;
 }

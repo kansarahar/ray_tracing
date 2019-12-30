@@ -14,6 +14,9 @@ class Sphere: public Surface {
         void rotateSelf(const vec3 &axis, double angle);
         void rotate(const vec3 &point, const vec3 &axis, double angle);
 
+        void texture();
+        void texture(vec3 (*texture_function)(double azimuthal_angle, double polar_angle));
+        
     private:
         vec3 _center;
         double _radius;

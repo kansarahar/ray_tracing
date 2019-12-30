@@ -67,3 +67,12 @@ void Plane::rotate(const vec3 &point, const vec3 &axis, double angle) {
     this->_point.rotate(point, axis, angle);
     this->rotateSelf(axis, angle);
 }
+
+void Plane::texture() {
+    this->_textured = true;
+}
+
+void Plane::texture(vec3 (*texture_function)(double x, double y)) {
+    this->_textured = true;
+    this->_texture_function = texture_function;
+}

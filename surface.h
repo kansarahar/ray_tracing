@@ -21,6 +21,9 @@ class Surface {
         virtual void rotateSelf(const vec3 &axis, double angle) = 0;
         virtual void rotate(const vec3 &point, const vec3 &axis, double angle) = 0;
 
+        virtual void texture() = 0;
+        virtual void texture(vec3 (*texture_function)(double, double)) = 0;
+
 
     protected: 
         double _t;

@@ -15,6 +15,7 @@ using namespace std;
 
 int main() {
 
+
     clock_t begin = clock();  
     const int width = 200;
     const int height = 100;
@@ -28,7 +29,7 @@ int main() {
 
     PointLight* plight = new PointLight(vec3(-20, 100, 0), 0.7);
     DirectionalLight *dlight = new DirectionalLight(vec3(1,0,-1), 0.1);
-    AmbientLight *alight = new AmbientLight(0.2);
+    AmbientLight *alight = new AmbientLight(.1);
     vector<Surface *> spheres;
     vector<Light *> lights;
     spheres.push_back(sphere);
@@ -44,6 +45,7 @@ int main() {
     // plane1->rotateSelf(vec3(0,1,0), 180);
     sphere->rotateSelf(vec3(1,0,0), 90);
     sphere2->rotateSelf(vec3(1,1,1),45);
+    plane1->texture();
 
 
     Camera camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 5);

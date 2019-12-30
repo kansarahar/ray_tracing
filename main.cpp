@@ -40,9 +40,13 @@ int main() {
     lights.push_back(dlight);
     lights.push_back(alight);
 
-    // plane1->rotate(vec3(0,0,0), vec3(0,1,0), 180);
-    plane1->rotateSelf(vec3(0,1,0), 180);
-    Camera camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 2);
+    // plane1->rotate(vec3(0,0,0), vec3(0,1,0), 20);
+    // plane1->rotateSelf(vec3(0,1,0), 180);
+    sphere->rotateSelf(vec3(1,0,0), 90);
+    sphere2->rotateSelf(vec3(1,1,1),45);
+
+
+    Camera camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 5);
     // Camera camera(vec3(0, 100, 0), vec3(0,-100,-1440), vec3(0,1440,-100), width, height, 200, 5);
     for (unsigned k = 0; k < lights.size(); k++) {
         Light* light = lights[k];

@@ -1,5 +1,12 @@
 #include "plane.h"
 
+inline vec3 defaultPlaneTexture(double x, double y) { 
+    double sinx = sin(x/20);
+    double siny = sin(y/20);
+    if ((sinx > 0 && siny > 0) || (sinx < 0 && siny < 0)) { return vec3(100,100,100); }
+    return vec3(200, 200, 200); 
+}
+
 Plane::Plane(vec3 point, vec3 normal, vec3 color): _point(point) {
     this->_t = 0;
     this->_color = color;
@@ -19,6 +26,9 @@ Plane::Plane(vec3 point, vec3 normal, vec3 color): _point(point) {
         this->_right = cross(this->_cross, this->_up);
     }
 
+    this->_textured = false;
+    this->_texture_function = defaultPlaneTexture;
+
 }
 
 Plane::~Plane() { }
@@ -31,6 +41,11 @@ bool Plane::hit(Ray &ray) {
         this->_t = t;
         if (dot(ray.direction, this->_normal) > 0) {
             this->_normal = -1*this->_normal;
+        }
+        if (this->_textured) {
+            double x = dot(ray.at(t)-this->_point, this->_right);
+            double y = dot(ray.at(t)-this->_point, this->_cross);
+            this->_color = this->_texture_function(x,y);
         }
         return true;
     }

@@ -31,6 +31,9 @@ class Surface {
         vec3 _up;
         vec3 _right;
         vec3 _cross;
+
+        bool _textured;
+        vec3 (*_texture_function)(double, double);
 };
 
 #endif

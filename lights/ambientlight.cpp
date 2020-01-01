@@ -1,7 +1,7 @@
 #include "ambientlight.h"
 
-AmbientLight::AmbientLight(double intensity)  {
-    this->intensity = intensity;
+AmbientLight::AmbientLight(vec3 color, double intensity)  {
+    this->intensity = intensity*(color.unit());
 }
 
 AmbientLight::~AmbientLight() { }

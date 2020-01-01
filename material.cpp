@@ -1,6 +1,6 @@
 #include "material.h"
 
-Material::Material(int type, std::string name): type(type), name(name) {
+Material::Material(int type): type(type) {
     if (type == __REFLECTIVE__) {
         albedo = 0.92;
 

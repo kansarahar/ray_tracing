@@ -7,7 +7,7 @@
 class AmbientLight: public Light {
     public: 
 
-        AmbientLight(double intensity);
+        AmbientLight(vec3 color, double intensity);
         ~AmbientLight();
 
         vec3 illuminate(Ray &source_ray, const std::vector<Surface *> &surfaces);

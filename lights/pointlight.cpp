@@ -1,8 +1,8 @@
 #include "pointlight.h"
 #include <iostream>
-PointLight::PointLight(vec3 center, double intensity)  {
+PointLight::PointLight(vec3 center, vec3 color, double intensity)  {
     this->center = center;
-    this->intensity = intensity;
+    this->intensity = intensity*(color.unit());
     this->attenuated = false;
     this->showing = false;
     this->attenuation_function = vec3(1, 0, 0);

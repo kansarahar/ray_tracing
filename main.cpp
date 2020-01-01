@@ -20,15 +20,15 @@ int main() {
     
 
 
-    Sphere* sphere = new Sphere(vec3(0, 440, 0), 30, vec3(255,0,0));
-    Sphere* sphere2 = new Sphere(vec3(50, 440, 0), 30, vec3(0,255,0));
-    Sphere* sphere3 = new Sphere(vec3(0, 440, 50), 30, vec3(0,0,255));
+    Sphere* sphere = new Sphere(vec3(0, 440, 0), 30, vec3(255,80,80));
+    Sphere* sphere2 = new Sphere(vec3(50, 440, 0), 30, vec3(80,255,80));
+    Sphere* sphere3 = new Sphere(vec3(0, 440, 50), 30, vec3(80,80,255));
     Sphere* sphere4 = new Sphere(vec3(-500, 1000, 250), 30, vec3(255,255,0));
     Plane* plane1 = new Plane(vec3(0,0,-100), vec3(0,0,1));
 
-    PointLight* plight = new PointLight(vec3(-20, 100, 0), 0.7);
-    DirectionalLight *dlight = new DirectionalLight(vec3(1,0,-1), 0.1);
-    AmbientLight *alight = new AmbientLight(.1);
+    PointLight* plight = new PointLight(vec3(-20, 100, 0), vec3(0,0,1), 1);
+    DirectionalLight *dlight = new DirectionalLight(vec3(1,0,-1), vec3(1,1,1), 0.1);
+    AmbientLight *alight = new AmbientLight(vec3(1,1,1), 0.1);
 
     Scene scene(camera);
     scene.addSurface(sphere);
@@ -37,8 +37,8 @@ int main() {
     scene.addSurface(sphere4);
     scene.addSurface(plane1);
     scene.addLight(plight);
-    scene.addLight(dlight);
-    scene.addLight(alight);
+    // scene.addLight(dlight);
+    // scene.addLight(alight);
 
     // plane1->rotate(vec3(0,0,0), vec3(0,1,0), 20);
     // plane1->rotateSelf(vec3(0,1,0), 180);

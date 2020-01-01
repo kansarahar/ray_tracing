@@ -6,7 +6,7 @@
 
 class Light {
     public: 
-        double intensity;
+        vec3 intensity;
 
         virtual ~Light() { };
 

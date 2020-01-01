@@ -20,7 +20,7 @@ void vec3::rotate(const vec3 &point, const vec3 &axis, double theta) {
 
 vec3 vec3::reflect(const vec3 &normal) {
     vec3 n = normal.unit();
-    vec3 l = (*this).unit();
+    vec3 l = -1*(*this).unit();
     return 2*(dot(l,n)*n)-l;
 }
 

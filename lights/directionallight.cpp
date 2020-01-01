@@ -1,8 +1,8 @@
 #include "directionallight.h"
 
-DirectionalLight::DirectionalLight(vec3 direction, double intensity)  {
+DirectionalLight::DirectionalLight(vec3 direction, vec3 color, double intensity)  {
     this->direction = direction.unit();
-    this->intensity = intensity;
+    this->intensity = intensity*(color.unit());
 }
 
 DirectionalLight::~DirectionalLight() { }

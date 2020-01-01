@@ -12,7 +12,7 @@ class PointLight: public Light {
         bool showing;
         Sphere* lightsphere;
 
-        PointLight(vec3 center, double intensity);
+        PointLight(vec3 center, vec3 color, double intensity);
         ~PointLight();
 
         inline void show() { this->showing = true; };

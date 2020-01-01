@@ -10,7 +10,6 @@
 class Material {
     public:
         int type;
-        std::string name;
 
         double albedo;
 
@@ -24,7 +23,7 @@ class Material {
         double fraction_refracted;
         double ior;
 
-        Material(int type, std::string name);
+        Material(int type);
 };
 
 #endif

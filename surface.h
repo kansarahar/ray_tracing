@@ -8,7 +8,7 @@
 class Surface {
     public: 
 
-        Material *material;
+        Material material = Material(__DIFFUSE__);
 
         virtual ~Surface() { };
         virtual bool hit(Ray &ray) = 0;

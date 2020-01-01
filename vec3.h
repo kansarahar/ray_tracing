@@ -21,6 +21,7 @@ class vec3 {
         inline void operator+=(const vec3 &other) { this->a += other.a; this->b += other.b; this->c += other.c; };
         inline void operator-=(const vec3 &other) { this->a -= other.a; this->b -= other.b; this->c -= other.c; };
         inline void operator*=(const vec3 &other) { this->a *= other.a; this->b *= other.b; this->c *= other.c; };
+        inline void operator*=(const double c) { this->a *= c; this->b *= c; this->c *= c;}
         inline bool operator==(const vec3 &other) { return this->a == other.a && this->b == other.b && this->c == other.c; };
 
         double mag() const;
@@ -42,6 +43,9 @@ inline vec3 operator*(const vec3 &v1, const vec3 &v2) { return vec3(v1.a*v2.a, v
 inline vec3 operator*(double c, const vec3 &v) { return vec3(v.a*c, v.b*c, v.c*c); };
 inline vec3 operator*(const vec3 &v, double c) { return vec3(v.a*c, v.b*c, v.c*c); };
 inline vec3 operator/(const vec3 &v, double c) { return vec3(v.a/c, v.b/c, v.c/c); };
+
+inline bool operator>(const vec3 &v, double c) { return v.a > c && v.b > c && v.c > c; };
+inline bool operator<(const vec3 &v, double c) { return v.a < c || v.b < c || v.c < c; };
 
 inline double dot(const vec3 &v1, const vec3 &v2) { return v1.a*v2.a + v1.b*v2.b + v1.c*v2.c; };
 inline vec3 cross(const vec3 &v1, const vec3 &v2) { return vec3(v1.b*v2.c-v1.c*v2.b, v1.c*v2.a-v1.a*v2.c, v1.a*v2.b-v1.b*v2.a); };

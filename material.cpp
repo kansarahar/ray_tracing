@@ -28,9 +28,9 @@ Material::Material(int type): type(type) {
         albedo = 0.78;
 
         k_a = 0.10;
-        k_d = 0.75;
-        k_s = 0.15;
-        alpha = 10; 
+        k_d = 0.65;
+        k_s = 0.25;
+        alpha = 20; 
         
         fraction_reflected = 0;
         fraction_refracted = 0;

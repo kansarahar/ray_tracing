@@ -9,7 +9,7 @@ Material::Material(int type): type(type) {
         k_s = 0.35;
         alpha = 10;
 
-        fraction_reflected = 0.85;
+        fraction_reflected = 0.7;
         fraction_refracted = 0;
         ior = 0;
     }

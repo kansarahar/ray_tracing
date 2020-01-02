@@ -4,13 +4,6 @@
 #include "camera.h"
 #include "surface.h"
 #include "light.h"
-// #include "material.h"
-
-#include "surfaces/sphere.h"
-#include "surfaces/plane.h"
-#include "lights/ambientlight.h"
-#include "lights/directionallight.h"
-#include "lights/pointlight.h"
 
 #include <string>
 #include <stdlib.h>

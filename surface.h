@@ -22,8 +22,8 @@ class Surface {
         virtual void rotateSelf(const vec3 &axis, double angle) = 0;
         virtual void rotate(const vec3 &point, const vec3 &axis, double angle) = 0;
 
-        virtual void texture() = 0;
-        virtual void texture(vec3 (*texture_function)(double, double)) = 0;
+        virtual void texture() { this->_textured = true; };
+        virtual void texture(vec3 (*texture_function)(double, double)) { this->_textured = true; this->_texture_function = texture_function; };
 
 
 
@@ -41,5 +41,41 @@ class Surface {
         vec3 (*_texture_function)(double, double);
 };
 
+
+class Sphere: public Surface {
+    public: 
+
+        Sphere(vec3 center, double radius, vec3 color);
+        ~Sphere();
+
+        bool hit(Ray &ray);
+        void translateSelf(const vec3 &translation);
+        void rotateSelf(const vec3 &axis, double angle);
+        void rotate(const vec3 &point, const vec3 &axis, double angle);
+
+
+    private:
+        vec3 _center;
+        double _radius;
+
+};
+
+
+class Plane: public Surface {
+    public: 
+
+        Plane(vec3 point=vec3(0,0,-100), vec3 normal=vec3(0,0,1), vec3 color=vec3(150,150,150));
+
+        ~Plane();
+
+        bool hit(Ray &ray);
+        void translateSelf(const vec3 &translation);
+        void rotateSelf(const vec3 &axis, double angle);
+        void rotate(const vec3 &point, const vec3 &axis, double angle);
+
+    private:
+        vec3 _point;
+
+};
 
 #endif

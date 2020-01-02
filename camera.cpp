@@ -59,7 +59,7 @@ Camera::Camera(vec3 center, vec3 lookat, vec3 up, double screen_width, double sc
 
 Camera::~Camera() { }
 
-Ray Camera::castRay(unsigned screen_x_pixel, unsigned screen_y_pixel) {
+Ray Camera::castRay(double screen_x_pixel, double screen_y_pixel) {
     // resolution = pixels / unit length
     double x_dist = (screen_x_pixel-this->screen->width_px/2.0)/this->screen->resolution;
     double y_dist = (this->screen->height_px/2.0-screen_y_pixel)/this->screen->resolution;

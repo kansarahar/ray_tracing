@@ -13,6 +13,8 @@
 #include "lights/pointlight.h"
 
 #include <string>
+#include <stdlib.h>
+#include <ctime>
 
 class Scene {
     public: 
@@ -26,7 +28,10 @@ class Scene {
         void addSurface(Surface *surface) { surfaces->push_back(surface); };
         void addLight(Light *light) { lights->push_back(light); };
 
-        void render(int ray_depth, std::string image_name);
+        void render(unsigned ray_depth, unsigned jitters, std::string image_name);
+    
+    private:
+        vec3 _castRay(unsigned depth, Ray &ray, Light *&light);
 };
 
 #endif

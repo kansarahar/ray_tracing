@@ -38,7 +38,7 @@ class Camera {
         );
         ~Camera();
 
-        Ray castRay(unsigned screen_x_pixel, unsigned screen_y_pixel);
+        Ray castRay(double screen_x_pixel, double screen_y_pixel);
 
         void saveBMP(std::string name);
         void savePPM(std::string name);

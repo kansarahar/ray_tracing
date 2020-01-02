@@ -9,6 +9,7 @@ class Surface {
     public: 
 
         Material material = Material(__DIFFUSE__);
+        void setMaterial(unsigned material_type) { this->material = Material(material_type); };
 
         virtual ~Surface() { };
         virtual bool hit(Ray &ray) = 0;
@@ -23,6 +24,7 @@ class Surface {
 
         virtual void texture() = 0;
         virtual void texture(vec3 (*texture_function)(double, double)) = 0;
+
 
 
     protected: 

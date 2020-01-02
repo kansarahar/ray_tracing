@@ -38,6 +38,10 @@ class Camera {
         );
         ~Camera();
 
+        void translateSelf(const vec3 &translation) { this->center += translation; };
+        void rotateSelf(const vec3 &axis, double angle);
+        void rotate(const vec3 &point, const vec3 &axis, double angle);
+
         Ray castRay(double screen_x_pixel, double screen_y_pixel);
 
         void saveBMP(std::string name);

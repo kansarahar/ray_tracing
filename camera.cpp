@@ -59,6 +59,17 @@ Camera::Camera(vec3 center, vec3 lookat, vec3 up, double screen_width, double sc
 
 Camera::~Camera() { }
 
+void Camera::rotateSelf(const vec3 &axis, double angle) {
+    this->lookat.rotate(axis, angle);
+    this->up.rotate(axis, angle);
+    this->right.rotate(axis, angle);
+}
+
+void Camera::rotate(const vec3 &point, const vec3 &axis, double angle) {
+    this->center.rotate(point, axis, angle);
+    this->rotateSelf(axis, angle);
+}
+
 Ray Camera::castRay(double screen_x_pixel, double screen_y_pixel) {
     // resolution = pixels / unit length
     double x_dist = (screen_x_pixel-this->screen->width_px/2.0)/this->screen->resolution;

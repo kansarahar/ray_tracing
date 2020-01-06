@@ -17,19 +17,36 @@ class Surface {
         inline double t() { return this->_t; };
         inline vec3 normal() { return this->_normal; };
         inline virtual vec3 color() { return this->_color; };
+        virtual void calculateValues(Ray &ray) = 0;
 
-        virtual void translateSelf(const vec3 &translation) = 0;
-        virtual void rotateSelf(const vec3 &axis, double angle) = 0;
-        virtual void rotate(const vec3 &point, const vec3 &axis, double angle) = 0;
+        virtual void translateSelf(const vec3 &translation) { this->_center.translate(translation); };
+        virtual void rotateSelf(const vec3 &axis, double angle) { 
+            this->_up.rotate(axis, angle);
+            this->_right.rotate(axis, angle);
+            this->_cross.rotate(axis, angle);
+        };
+        virtual void rotate(const vec3 &point, const vec3 &axis, double angle) {
+            this->_center.rotate(axis, angle);
+            this->rotateSelf(axis, angle);
+        };
 
         virtual void texture() { this->_textured = true; };
-        virtual void texture(vec3 (*texture_function)(double, double)) { this->_textured = true; this->_texture_function = texture_function; };
+        virtual void texture(vec3 (*texture_function)(
+            const vec3 &hit_point, 
+            const vec3 &center, 
+            const vec3 &up, 
+            const vec3 &right, 
+            const vec3 &cross
+        )) {
+            this->_textured = true; this->_texture_function = texture_function; 
+        };
 
 
 
     protected: 
         double _t;
         vec3 _normal;
+        vec3 _center;
         vec3 _color;
 
         // basis vectors for surface
@@ -38,7 +55,13 @@ class Surface {
         vec3 _cross;
 
         bool _textured;
-        vec3 (*_texture_function)(double, double);
+        vec3 (*_texture_function)(
+            const vec3 &hit_point, 
+            const vec3 &center, 
+            const vec3 &up, 
+            const vec3 &right, 
+            const vec3 &cross
+        );
 };
 
 
@@ -46,36 +69,74 @@ class Sphere: public Surface {
     public: 
 
         Sphere(vec3 center, double radius, vec3 color);
-        ~Sphere();
 
         bool hit(Ray &ray);
-        void translateSelf(const vec3 &translation);
-        void rotateSelf(const vec3 &axis, double angle);
-        void rotate(const vec3 &point, const vec3 &axis, double angle);
-
+        void calculateValues(Ray &ray);
 
     private:
-        vec3 _center;
         double _radius;
 
 };
 
 
+class Cylinder: public Surface {
+    public:
+        Cylinder(vec3 center, double radius, double height, vec3 color);
+
+        bool hit(Ray &ray);
+        void calculateValues(Ray &ray);
+
+    private:
+        double _radius;
+        double _height;
+};
+
+class Cone: public Surface {
+    public:
+        Cone(vec3 center, double angle, double height, vec3 color);
+
+        bool hit(Ray &ray);
+        void calculateValues(Ray &ray);
+    
+    private:
+        double _angle;
+        double _height;
+        double _cos_angle;
+        double _tan_angle;
+};
+
 class Plane: public Surface {
     public: 
 
-        Plane(vec3 point=vec3(0,0,-100), vec3 normal=vec3(0,0,1), vec3 color=vec3(150,150,150));
-
-        ~Plane();
+        Plane(vec3 center, vec3 normal, vec3 color);
 
         bool hit(Ray &ray);
+        void calculateValues(Ray &ray);
+
+        void rotateSelf(const vec3 &axis, double angle);
+};
+
+class Triangle: public Surface {
+    public: 
+        Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 color);
+
+        bool hit(Ray &ray);
+        void calculateValues(Ray &ray);
+        
         void translateSelf(const vec3 &translation);
         void rotateSelf(const vec3 &axis, double angle);
         void rotate(const vec3 &point, const vec3 &axis, double angle);
 
+    
     private:
-        vec3 _point;
-
+        vec3 _v0;
+        vec3 _v1;
+        vec3 _v2;
+        vec3 _normal_unnormalized;
+        double _area;
+        double _u;
+        double _v;
+        double _w;
 };
 
 #endif

@@ -14,7 +14,10 @@ vec3 Scene::_castRay(unsigned depth, Ray &ray, Light *&light) {
     if (depth == 0) { return vec3(); }
     ray.trace(*(this->surfaces));
     if (ray.hit_surface != nullptr) {
-        Material material = ray.hit_surface->material;
+        Surface *surface = ray.hit_surface;
+
+        surface->calculateValues(ray);
+        Material material = surface->material;
 
         if (material.type == __DIFFUSE__) {
             return material.albedo * light->illuminate(ray, *(this->surfaces));
@@ -22,7 +25,7 @@ vec3 Scene::_castRay(unsigned depth, Ray &ray, Light *&light) {
 
         if (material.type == __REFLECTIVE__) {
             vec3 self_color = material.albedo * light->illuminate(ray, *(this->surfaces));
-            Ray reflected_ray = Ray(ray.at(ray.hit_surface->t()*0.999999), ray.direction.reflect(ray.hit_surface->normal()));
+            Ray reflected_ray = Ray(ray.at(surface->t()*0.999999), ray.direction.reflect(surface->normal()));
             vec3 reflected_color = _castRay(depth-1, reflected_ray, light);
             return self_color*(1-material.fraction_reflected) + reflected_color*material.fraction_reflected;
         }        

@@ -44,12 +44,6 @@ vec3 DirectionalLight::illuminate(Ray &source_ray, const std::vector<Surface *> 
         if (pixel_color < 0) {
             return vec3();
         }
-        // vec3 pixel_color = surface->color()*this->intensity*dot(shadow_ray.direction.unit(), surface->normal().unit());
-        // pixel_color *= surface->material.k_d;
-        
-        // if (pixel_color.a < 0 || pixel_color.b < 0 || pixel_color.c < 0) {
-        //     return vec3();
-        // }
         return pixel_color;
     }
     return vec3();

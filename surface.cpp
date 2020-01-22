@@ -88,9 +88,9 @@ bool Sphere::hit(Ray &ray) {
 
 void Sphere::calculateValues(Ray &ray) {
     this->_normal = (ray.at(this->_t)-this->_center).unit();
-    if (this->_textured) {
-        this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
-    }
+    this->_outer_surface_normal = this->_normal;
+    if (dot(ray.direction, this->_normal) > 0) { this->_normal = -1*this->_normal; }
+    if (this->_textured) { this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross); }
 }
 
 
@@ -141,12 +141,9 @@ bool Cylinder::hit(Ray &ray) {
 void Cylinder::calculateValues(Ray &ray) {
     vec3 r = ray.at(this->_t) - this->_center;
     this->_normal = (r - dot(r, this->_up)*this->_up).unit();
-    if (dot(ray.direction, this->_normal) > 0) {
-        this->_normal = -1*this->_normal;
-    }
-    if (this->_textured) {
-        this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
-    }
+    this->_outer_surface_normal = this->_normal;
+    if (dot(ray.direction, this->_normal) > 0) { this->_normal = -1*this->_normal; }
+    if (this->_textured) { this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross); }
 }
 
 
@@ -200,12 +197,9 @@ void Cone::calculateValues(Ray &ray) {
     vec3 r = ray.at(this->_t) - this->_center;
     vec3 s = (r - dot(r, this->_up)*this->_up).unit();
     this->_normal = (s - (this->_tan_angle*this->_up)).unit();
-    if (dot(ray.direction, this->_normal) > 0) {
-        this->_normal = -1*this->_normal;
-    }
-    if (this->_textured) {
-        this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
-    }
+    this->_outer_surface_normal = this->_normal;
+    if (dot(ray.direction, this->_normal) > 0) { this->_normal = -1*this->_normal; }
+    if (this->_textured) { this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross); }
 }
 
 
@@ -230,15 +224,17 @@ Plane::Plane(vec3 center, vec3 normal, vec3 color) {
         this->_right = cross(this->_cross, this->_up);
     }
 
+    this->_outer_surface_normal = this->_up;
+
     this->_textured = false;
     this->_texture_function = defaultPlaneTexture;
 
 }
 
 bool Plane::hit(Ray &ray) {
-    double denom = dot(this->_normal, ray.direction);
+    double denom = dot(this->_up, ray.direction);
     if (denom == 0) { return false; }
-    double t = dot(this->_normal, this->_center-ray.origin)/denom;
+    double t = dot(this->_up, this->_center-ray.origin)/denom;
     if (t > 1e-10) {
         this->_t = t;
         return true;
@@ -247,16 +243,13 @@ bool Plane::hit(Ray &ray) {
 }
 
 void Plane::calculateValues(Ray &ray) {
-    if (dot(ray.direction, this->_normal) > 0) {
-        this->_normal = -1*this->_normal;
-    }
-    if (this->_textured) {
-        this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
-    }
+    if (dot(ray.direction, this->_normal) > 0) { this->_normal = -1*this->_normal; }
+    if (this->_textured) { this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross); }
 }
 
 void Plane::rotateSelf(const vec3 &axis, double angle) {
     this->_normal.rotate(axis, angle);
+    this->_outer_surface_normal.rotate(axis, angle);
     this->_up.rotate(axis, angle);
     this->_right.rotate(axis, angle);
     this->_cross.rotate(axis, angle);
@@ -276,25 +269,23 @@ Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 color):
     this->_right = (v1-v0).unit();
     this->_cross = cross(this->_up, this->_right).unit();
 
+    this->_outer_surface_normal = this->_up;
+
     this->_textured = false;
     this->_texture_function = defaultPlaneTexture;
 }
 
 bool Triangle::hit(Ray &ray) {
 
-    double denom = dot(this->_normal, ray.direction);
+    double denom = dot(this->_up, ray.direction);
     if (denom == 0) { return false; }
-    double t = dot(this->_normal, this->_center-ray.origin)/denom;
+    double t = dot(this->_up, this->_center-ray.origin)/denom;
     if (t > 1e-10) {
         this->_t = t;
-
-        vec3 v1v0 = this->_v1 - this->_v0;
-        vec3 v2v0 = this->_v2 - this->_v0;
-
-        vec3 point = ray.at(t)-this->_v0;
-        double u = dot(cross(v1v0, point), this->_normal)/2/this->_area;
+        vec3 point = ray.at(t) - this->_v0;
+        double u = dot(cross(this->_v1 - this->_v0, point), this->_up)/2/this->_area;
         if (u > 0) { 
-            double v = dot(cross(point, v2v0), this->_normal)/2/this->_area;
+            double v = dot(cross(point, this->_v2 - this->_v0), this->_up)/2/this->_area;
             if (v > 0 && 1-u-v > 0) {
                 this->_u = u;
                 this->_v = v;
@@ -309,9 +300,6 @@ bool Triangle::hit(Ray &ray) {
 void Triangle::calculateValues(Ray &ray) {
     if (dot(ray.direction, this->_normal) > 0) {
         this->_normal = -1*this->_normal;
-        vec3 temp_v1 = this->_v1;
-        this->_v1 = this->_v2;
-        this->_v2 = temp_v1;
         this->_normal_unnormalized = -1*this->_normal_unnormalized;
     }
     if (this->_textured) {
@@ -328,6 +316,7 @@ void Triangle::translateSelf(const vec3 &translation) {
 
 void Triangle::rotateSelf(const vec3 &axis, double angle) {
     this->_normal.rotate(axis, angle);
+    this->_outer_surface_normal.rotate(axis, angle);
     this->_up.rotate(axis, angle);
     this->_right.rotate(axis, angle);
     this->_cross.rotate(axis, angle);
@@ -339,6 +328,7 @@ void Triangle::rotateSelf(const vec3 &axis, double angle) {
 
 void Triangle::rotate(const vec3 &point, const vec3 &axis, double angle) {
     this->_normal.rotate(axis, angle);
+    this->_outer_surface_normal.rotate(axis, angle);
     this->_up.rotate(axis, angle);
     this->_right.rotate(axis, angle);
     this->_cross.rotate(axis, angle);

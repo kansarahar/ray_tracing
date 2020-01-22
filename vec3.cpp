@@ -18,10 +18,8 @@ void vec3::rotate(const vec3 &point, const vec3 &axis, double theta) {
     this->translate(point);
 }
 
-vec3 vec3::reflect(const vec3 &normal) {
-    vec3 n = normal.unit();
-    vec3 l = -1*(*this).unit();
-    return 2*(dot(l,n)*n)-l;
+vec3 vec3::reflect(const vec3 &unit_normal) {
+    return *this - 2*dot(*this, unit_normal)*unit_normal;
 }
 
 std::string vec3::to_string() { return "< " + std::to_string(this->a) + ", " + std::to_string(this->b) + ", " + std::to_string(this->c) + " >"; };

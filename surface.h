@@ -54,6 +54,8 @@ class Surface {
         vec3 _right;
         vec3 _cross;
 
+        vec3 _outer_surface_normal;
+
         bool _textured;
         vec3 (*_texture_function)(
             const vec3 &hit_point, 

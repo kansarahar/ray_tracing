@@ -28,27 +28,27 @@ int main() {
     
     Cone* cone1 = new Cone(vec3(-100,370,-100), 30, 60, vec3(150,150,150));
 
-    Triangle* tri1 = new Triangle(vec3(0,440,0), vec3(-100,440,100), vec3(100,440,100), vec3(255,0,0));
+    Triangle* tri1 = new Triangle(vec3(0,0,0), vec3(-100,0,100), vec3(100,0,100), vec3(250,0,0));
 
-    PointLight* plight = new PointLight(vec3(-50,350, 100), vec3(1,1,1), 1.5);
-    DirectionalLight *dlight = new DirectionalLight(vec3(-1,0,-1), vec3(1,1,1), 1.5);
+    PointLight* plight = new PointLight(vec3(-50,350, 500), vec3(1,1,1), 1);
+    DirectionalLight *dlight = new DirectionalLight(vec3(-1,0,-1), vec3(1,1,1), 0.7);
     DirectionalLight *dlight2 = new DirectionalLight(vec3(0,0,-1), vec3(1,1,1), 0.5);
-    DirectionalLight *dlight3 = new DirectionalLight(vec3(0,1,-1), vec3(1,1,1), 1);
+    DirectionalLight *dlight3 = new DirectionalLight(vec3(0,1,-1), vec3(1,1,1), 0.7);
     AmbientLight *alight = new AmbientLight(vec3(1,1,1), 1);
 
     Scene scene(camera);
     scene.addSurface(sphere);
-    // scene.addSurface(sphere2);
-    // scene.addSurface(sphere3);
+    scene.addSurface(sphere2);
+    scene.addSurface(sphere3);
     scene.addSurface(plane1);
-    // scene.addSurface(cylinder1);
-    // scene.addSurface(cone1);
+    scene.addSurface(cylinder1);
+    scene.addSurface(cone1);
     scene.addSurface(tri1);
 
     scene.addLight(plight);
     scene.addLight(dlight);
     scene.addLight(dlight2);
-    // scene.addLight(dlight3);
+    scene.addLight(dlight3);
     scene.addLight(alight);
 
     sphere->rotateSelf(vec3(1,0,0), 90);
@@ -56,24 +56,26 @@ int main() {
     plane1->rotateSelf(vec3(1,0,0), 180);
     cone1->rotateSelf(vec3(0,1,0), -30);
     // cylinder1->rotateSelf(vec3(0,1,0), -30);
-    tri1->rotateSelf(vec3(0,0,1), 60);
-    tri1->translateSelf(vec3(0,0,-100));
+    tri1->rotateSelf(vec3(0,0,1), 180);
+    // tri1->rotateSelf(vec3(0,1,0), -30);
+    tri1->translateSelf(vec3(0,500,-50));
 
-    plane1->texture();
-    // sphere2->texture();
 
     plane1->setMaterial(__REFLECTIVE__);
+    tri1->setMaterial(__REFLECTIVE__);
     // sphere2->setMaterial(__REFLECTIVE__);
     // sphere->setMaterial(__REFLECTIVE__);
     cone1->setMaterial(__REFLECTIVE__);
     cylinder1->setMaterial(__REFLECTIVE__);
 
+    plane1->texture();
+    // sphere2->texture();
     // cone1->texture();
     // cylinder1->texture();
 
-    // camera->translateSelf(vec3(0,0,-50));
-    // camera->rotate(vec3(0,440,0), camera->right, -45);
-    // camera->rotate(vec3(0,440,0), vec3(0,0,1), 45);
+    camera->translateSelf(vec3(0,0,-50));
+    camera->rotate(vec3(0,440,0), camera->right, -45);
+    camera->rotate(vec3(0,440,0), vec3(0,0,1), 45);
 
     scene.render(10, 1, "image.bmp");
     clock_t end = clock();

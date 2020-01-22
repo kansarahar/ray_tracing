@@ -1,5 +1,5 @@
 #include "scene.h"
-
+#include <iostream>
 Scene::Scene(Camera *camera): camera(camera) {
     this->surfaces = new std::vector<Surface *>;    
     this->lights = new std::vector<Light *>;
@@ -24,10 +24,10 @@ vec3 Scene::_castRay(unsigned depth, Ray &ray, Light *&light) {
         }
 
         if (material.type == __REFLECTIVE__) {
-            vec3 self_color = material.albedo * light->illuminate(ray, *(this->surfaces));
+            vec3 self_color = light->illuminate(ray, *(this->surfaces));
             Ray reflected_ray = Ray(ray.at(surface->t()*0.999999), ray.direction.reflect(surface->normal()));
             vec3 reflected_color = _castRay(depth-1, reflected_ray, light);
-            return self_color*(1-material.fraction_reflected) + reflected_color*material.fraction_reflected;
+            return material.albedo * (self_color*(1-material.fraction_reflected) + reflected_color*material.fraction_reflected);
         }        
     }
     return vec3();

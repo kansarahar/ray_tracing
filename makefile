@@ -3,8 +3,8 @@ CXX = g++
 
 CXXFLAGS = -Wall -g
 
-main: obj/main.o obj/vec3.o obj/camera.o obj/material.o obj/surface.o obj/light.o obj/scene.o
-	$(CXX) $(CXXFLAGS) obj/main.o obj/vec3.o obj/camera.o obj/material.o obj/surface.o obj/light.o obj/scene.o -o main
+main: obj/main.o obj/vec3.o obj/camera.o obj/material.o obj/texture.o obj/surface.o obj/light.o obj/scene.o
+	$(CXX) $(CXXFLAGS) obj/main.o obj/vec3.o obj/camera.o obj/material.o obj/texture.o obj/surface.o obj/light.o obj/scene.o -o main
 
 obj/vec3.o: vec3.h vec3.cpp | obj
 	$(CXX) $(CXXFLAGS) -c vec3.cpp -o obj/vec3.o
@@ -14,6 +14,9 @@ obj/camera.o: camera.h camera.cpp bmp.h | obj
 
 obj/material.o: material.h material.cpp | obj
 	$(CXX) $(CXXFLAGS) -c material.cpp -o obj/material.o
+
+obj/texture.o: texture.h texture.cpp | obj 
+	$(CXX) $(CXXFLAGS) -c texture.cpp -o obj/texture.o
 
 obj/surface.o: surface.h surface.cpp | obj
 	$(CXX) $(CXXFLAGS) -c surface.cpp -o obj/surface.o

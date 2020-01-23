@@ -58,7 +58,6 @@ PointLight::PointLight(vec3 center, vec3 color, double intensity)  {
     this->attenuated = false;
     this->showing = false;
     this->attenuation_function = vec3(1, 0, 0);
-    this->lightsphere = new Sphere(center, 1, vec3(255,255,255));
 }
 
 PointLight::~PointLight() { }

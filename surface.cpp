@@ -1,67 +1,15 @@
 #include "surface.h"
 
-inline vec3 defaultSphereTexture(
-    const vec3 &hit_point, 
-    const vec3 &center, 
-    const vec3 &up, 
-    const vec3 &right, 
-    const vec3 &cross
-    ) { 
-    vec3 r = hit_point-center;
-    double cos_azi = cos(acos(dot((r - dot(r,up)*up).unit(), right))*5);
-    double cos_pol = cos(acos(dot(r.unit(), up))*5);
-    if ((cos_azi > 0 && cos_pol < 0) || (cos_azi < 0 && cos_pol > 0)) {
-        return vec3(100, 100, 100);
-    }
-    return vec3(200, 200, 200); 
-}
 
-inline vec3 defaultCylinderAndConeTexture(
-    const vec3 &hit_point, 
-    const vec3 &center, 
-    const vec3 &up, 
-    const vec3 &right, 
-    const vec3 &cross
-    ) {
-    vec3 r = hit_point-center;
-    double cos_height = cos(dot(r, up)/5);
-    double cos_angle = cos(acos(dot((r - dot(r,up)*up).unit(), right))*5);
-    if ((cos_height > 0 && cos_angle < 0) || (cos_height < 0 && cos_angle > 0)) {
-        return vec3(100, 100, 100);
-    }
-    return vec3(200, 200, 200);
-}
 
-inline vec3 defaultPlaneTexture(
-    const vec3 &hit_point, 
-    const vec3 &center, 
-    const vec3 &up, 
-    const vec3 &right, 
-    const vec3 &cross
-    ) { 
-    vec3 r = hit_point-center;
-    double x = sin(dot(r, right)/10);
-    double y = sin(dot(r, cross)/10);
-    if ((x > 0 && y < 0) || (x < 0 && y > 0)) {
-        return vec3(100, 100, 100);
-    }
-    return vec3(200, 200, 200); 
-}
-
-Sphere::Sphere(vec3 center, double radius, vec3 color): 
+Sphere::Sphere(vec3 center, double radius): 
     _radius(radius) {
-    
-    this->_t = 0;
-    this->_normal = vec3();
+
     this->_center = center;
-    this->_color = color;
 
     this->_up = vec3(0,0,1);
     this->_right = vec3(1,0,0);
     this->_cross = vec3(0,1,0);
-
-    this->_textured = false;
-    this->_texture_function = defaultSphereTexture;
 }
 
 bool Sphere::hit(Ray &ray) {
@@ -90,25 +38,19 @@ void Sphere::calculateValues(Ray &ray) {
     this->_normal = (ray.at(this->_t)-this->_center).unit();
     this->_outer_surface_normal = this->_normal;
     if (dot(ray.direction, this->_normal) > 0) { this->_normal = -1*this->_normal; }
-    if (this->_textured) { this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross); }
+    this->_color = this->texture.getColor(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
 }
 
 
 
-Cylinder::Cylinder(vec3 center, double radius, double height, vec3 color): 
+Cylinder::Cylinder(vec3 center, double radius, double height): 
     _radius(radius), _height(height) {
 
-    this->_t = 0;
-    this->_normal = vec3();
     this->_center = center;
-    this->_color = color;
 
     this->_up = vec3(0,0,1);
     this->_right = vec3(1,0,0);
     this->_cross = vec3(0,1,0);
-
-    this->_textured = false;
-    this->_texture_function = defaultCylinderAndConeTexture;
 }
 
 bool Cylinder::hit(Ray &ray) {
@@ -143,26 +85,22 @@ void Cylinder::calculateValues(Ray &ray) {
     this->_normal = (r - dot(r, this->_up)*this->_up).unit();
     this->_outer_surface_normal = this->_normal;
     if (dot(ray.direction, this->_normal) > 0) { this->_normal = -1*this->_normal; }
-    if (this->_textured) { this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross); }
+    this->_color = this->texture.getColor(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
 }
 
 
 
 
-Cone::Cone(vec3 center, double angle, double height, vec3 color): 
+Cone::Cone(vec3 center, double angle, double height): 
     _angle(angle*M_PI/180), _height(height), _cos_angle(cos(angle*M_PI/180)), _tan_angle(tan(angle*M_PI/180)) {
 
     this->_t = 0;
     this->_normal = vec3();
     this->_center = center;
-    this->_color = color;
 
     this->_up = vec3(0,0,1);
     this->_right = vec3(1,0,0);
     this->_cross = vec3(0,1,0);
-
-    this->_textured = false;
-    this->_texture_function = defaultCylinderAndConeTexture;
 }
 
 bool Cone::hit(Ray &ray) {
@@ -199,15 +137,13 @@ void Cone::calculateValues(Ray &ray) {
     this->_normal = (s - (this->_tan_angle*this->_up)).unit();
     this->_outer_surface_normal = this->_normal;
     if (dot(ray.direction, this->_normal) > 0) { this->_normal = -1*this->_normal; }
-    if (this->_textured) { this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross); }
+    this->_color = this->texture.getColor(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
 }
 
 
 
-Plane::Plane(vec3 center, vec3 normal, vec3 color) {
-    this->_t = 0;
+Plane::Plane(vec3 center, vec3 normal) {
     this->_normal = normal.unit();
-    this->_color = color;
     this->_center = center;
 
     // ensure that basis vectors are orthogonal
@@ -224,11 +160,7 @@ Plane::Plane(vec3 center, vec3 normal, vec3 color) {
         this->_right = cross(this->_cross, this->_up);
     }
 
-    this->_outer_surface_normal = this->_up;
-
-    this->_textured = false;
-    this->_texture_function = defaultPlaneTexture;
-
+    this->_outer_surface_normal = this->_normal;
 }
 
 bool Plane::hit(Ray &ray) {
@@ -244,7 +176,7 @@ bool Plane::hit(Ray &ray) {
 
 void Plane::calculateValues(Ray &ray) {
     if (dot(ray.direction, this->_normal) > 0) { this->_normal = -1*this->_normal; }
-    if (this->_textured) { this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross); }
+    this->_color = this->texture.getColor(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
 }
 
 void Plane::rotateSelf(const vec3 &axis, double angle) {
@@ -257,12 +189,11 @@ void Plane::rotateSelf(const vec3 &axis, double angle) {
 
 
 
-Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 color):
+Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2):
     _v0(v0), _v1(v1), _v2(v2), _normal_unnormalized(cross(v1-v0, v2-v0)), _area(_normal_unnormalized.mag()/2), _u(0), _v(0), _w(0) {
 
     this->_t = 0;
     this->_normal = cross(v1-v0, v2-v0).unit();
-    this->_color = color;
     this->_center = v0;
 
     this->_up = _normal;
@@ -270,9 +201,6 @@ Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 color):
     this->_cross = cross(this->_up, this->_right).unit();
 
     this->_outer_surface_normal = this->_up;
-
-    this->_textured = false;
-    this->_texture_function = defaultPlaneTexture;
 }
 
 bool Triangle::hit(Ray &ray) {
@@ -302,9 +230,7 @@ void Triangle::calculateValues(Ray &ray) {
         this->_normal = -1*this->_normal;
         this->_normal_unnormalized = -1*this->_normal_unnormalized;
     }
-    if (this->_textured) {
-        this->_color = _texture_function(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
-    }
+    this->_color = this->texture.getColor(ray.at(this->_t), this->_center, this->_up, this->_right, this->_cross);
 }
 
 void Triangle::translateSelf(const vec3 &translation) {

@@ -2,6 +2,7 @@
 #define SURFACE_H
 
 #include "vec3.h"
+#include "texture.h"
 #include "material.h"
 
 
@@ -9,7 +10,13 @@ class Surface {
     public: 
 
         Material material = Material(__DIFFUSE__);
+        Texture texture = Texture(vec3(250,0,0));
+
         void setMaterial(unsigned material_type) { this->material = Material(material_type); };
+        void setTexture(vec3 solid_color) { this->texture = Texture(solid_color); }
+        void setTexture(vec3 (*_function)(const vec3 &hit_point, const vec3 &center, const vec3 &up, const vec3 &right, const vec3 &cross)) {
+            this->texture = Texture(_function);
+        }
 
         virtual ~Surface() { };
         virtual bool hit(Ray &ray) = 0;
@@ -30,24 +37,14 @@ class Surface {
             this->rotateSelf(axis, angle);
         };
 
-        virtual void texture() { this->_textured = true; };
-        virtual void texture(vec3 (*texture_function)(
-            const vec3 &hit_point, 
-            const vec3 &center, 
-            const vec3 &up, 
-            const vec3 &right, 
-            const vec3 &cross
-        )) {
-            this->_textured = true; this->_texture_function = texture_function; 
-        };
 
 
 
     protected: 
         double _t;
         vec3 _normal;
-        vec3 _center;
         vec3 _color;
+        vec3 _center;
 
         // basis vectors for surface
         vec3 _up;
@@ -55,22 +52,13 @@ class Surface {
         vec3 _cross;
 
         vec3 _outer_surface_normal;
-
-        bool _textured;
-        vec3 (*_texture_function)(
-            const vec3 &hit_point, 
-            const vec3 &center, 
-            const vec3 &up, 
-            const vec3 &right, 
-            const vec3 &cross
-        );
 };
 
 
 class Sphere: public Surface {
     public: 
 
-        Sphere(vec3 center, double radius, vec3 color);
+        Sphere(vec3 center, double radius);
 
         bool hit(Ray &ray);
         void calculateValues(Ray &ray);
@@ -83,7 +71,7 @@ class Sphere: public Surface {
 
 class Cylinder: public Surface {
     public:
-        Cylinder(vec3 center, double radius, double height, vec3 color);
+        Cylinder(vec3 center, double radius, double height);
 
         bool hit(Ray &ray);
         void calculateValues(Ray &ray);
@@ -95,7 +83,7 @@ class Cylinder: public Surface {
 
 class Cone: public Surface {
     public:
-        Cone(vec3 center, double angle, double height, vec3 color);
+        Cone(vec3 center, double angle, double height);
 
         bool hit(Ray &ray);
         void calculateValues(Ray &ray);
@@ -110,7 +98,7 @@ class Cone: public Surface {
 class Plane: public Surface {
     public: 
 
-        Plane(vec3 center, vec3 normal, vec3 color);
+        Plane(vec3 center, vec3 normal);
 
         bool hit(Ray &ray);
         void calculateValues(Ray &ray);
@@ -120,7 +108,7 @@ class Plane: public Surface {
 
 class Triangle: public Surface {
     public: 
-        Triangle(vec3 v0, vec3 v1, vec3 v2, vec3 color);
+        Triangle(vec3 v0, vec3 v1, vec3 v2);
 
         bool hit(Ray &ray);
         void calculateValues(Ray &ray);
@@ -140,5 +128,8 @@ class Triangle: public Surface {
         double _v;
         double _w;
 };
+
+
+
 
 #endif

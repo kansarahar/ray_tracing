@@ -16,7 +16,7 @@ int main() {
     const int width = 150;
     const int height = 100;
 
-    Camera *camera = new Camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 10);    
+    Camera *camera = new Camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 2);    
 
 
     Sphere* sphere1 = new Sphere(vec3(0, 440, -70), 30);
@@ -41,16 +41,16 @@ int main() {
 
     Scene scene(camera);
     scene.addSurface(sphere1);
-    scene.addSurface(sphere2);
-    scene.addSurface(sphere3);
+    // scene.addSurface(sphere2);
+    // scene.addSurface(sphere3);
     scene.addSurface(sphere4);
     scene.addSurface(plane1);
-    scene.addSurface(cylinder1);
-    scene.addSurface(cone1);
-    scene.addSurface(tri1);
+    // scene.addSurface(cylinder1);
+    // scene.addSurface(cone1);
+    // scene.addSurface(tri1);
 
     scene.addLight(plight1);
-    scene.addLight(plight2);
+    // scene.addLight(plight2);
     // scene.addLight(dlight1);
     // scene.addLight(dlight2);
     // scene.addLight(dlight3);
@@ -77,12 +77,10 @@ int main() {
 
     // plane1->setMaterial(__REFLECTIVE__);
     tri1->setMaterial(__REFLECTIVE__);
-    sphere2->setMaterial(__REFLECTIVE__);
+    sphere1->setMaterial(__REFRACTIVE__);
     // sphere->setMaterial(__REFLECTIVE__);
     cone1->setMaterial(__REFLECTIVE__);
     cylinder1->setMaterial(__REFLECTIVE__);
-
-    
 
     plane1->setTexture(checkerPlaneTexture);
 

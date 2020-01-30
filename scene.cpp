@@ -28,7 +28,20 @@ vec3 Scene::_castRay(unsigned depth, Ray &ray, Light *&light) {
             Ray reflected_ray = Ray(ray.at(surface->t()*0.999999), ray.direction.reflect(surface->normal()));
             vec3 reflected_color = _castRay(depth-1, reflected_ray, light);
             return material.albedo * (self_color*(1-material.fraction_reflected) + reflected_color*material.fraction_reflected);
-        }        
+        }
+
+        if (material.type == __REFRACTIVE__) {
+            vec3 self_color = light->illuminate(ray, *(this->surfaces));
+            Ray refracted_ray;
+            if (surface->outside(ray)) {
+                refracted_ray = Ray(ray.at(surface->t()*1.000001), ray.direction.refract(surface->normal(), 1, material.ior));
+            }
+            else {
+                refracted_ray = Ray(ray.at(surface->t()*1.000001), ray.direction.refract(surface->normal(), material.ior, 1));
+            }
+            vec3 refracted_color = _castRay(depth-1, refracted_ray, light);
+            return material.albedo * (self_color*(1-material.fraction_refracted) + refracted_color*material.fraction_refracted);
+        }
     }
     return vec3();
 }

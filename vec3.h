@@ -31,7 +31,8 @@ class vec3 {
         void rotate(const vec3 &point, const vec3 &axis, double theta);  // rotate about axis through arbitrary point
         void rotate(const vec3 &axis, double theta);  // rotate about axis through origin
 
-        vec3 reflect (const vec3 &normal);
+        vec3 reflect(const vec3 &unit_normal);
+        vec3 refract(const vec3 &unit_normal, const double &ni, const double &nt);
 
         std::string to_string();
 };

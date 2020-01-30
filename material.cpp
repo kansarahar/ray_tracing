@@ -14,16 +14,16 @@ Material::Material(int type): type(type) {
         ior = 0;
     }
     else if (type == __REFRACTIVE__) {
-        albedo = 0.84;
+        albedo = 1;
 
-        k_a = 0.22;
-        k_d = 0.54;
-        k_s = 0.24;
+        k_a = 0;
+        k_d = 0;
+        k_s = 1;
         alpha = 20;
 
         fraction_reflected = 0;
         fraction_refracted = 0.9;
-        ior = 1.3;
+        ior = 1.0;
     }
     else {
         type = __DIFFUSE__;

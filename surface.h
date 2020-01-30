@@ -20,6 +20,7 @@ class Surface {
 
         virtual ~Surface() { };
         virtual bool hit(Ray &ray) = 0;
+        virtual bool outside(Ray &ray) { return dot(ray.direction, _outer_surface_normal) < 0; }
 
         inline double t() { return this->_t; };
         inline vec3 normal() { return this->_normal; };

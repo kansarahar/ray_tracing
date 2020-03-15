@@ -16,7 +16,7 @@ int main() {
     const int width = 150;
     const int height = 100;
 
-    Camera *camera = new Camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 2);    
+    Camera *camera = new Camera(vec3(0,-200,0), vec3(0,1,0), vec3(0,0,1), width, height, 200, 5);    
 
 
     Sphere* sphere1 = new Sphere(vec3(0, 440, -70), 30);
@@ -50,10 +50,10 @@ int main() {
     // scene.addSurface(tri1);
 
     scene.addLight(plight1);
-    // scene.addLight(plight2);
-    // scene.addLight(dlight1);
-    // scene.addLight(dlight2);
-    // scene.addLight(dlight3);
+    scene.addLight(plight2);
+    scene.addLight(dlight1);
+    scene.addLight(dlight2);
+    scene.addLight(dlight3);
     scene.addLight(alight);
 
     sphere1->setTexture(vec3(255,80,80));
@@ -78,15 +78,15 @@ int main() {
     // plane1->setMaterial(__REFLECTIVE__);
     tri1->setMaterial(__REFLECTIVE__);
     sphere1->setMaterial(__REFRACTIVE__);
-    // sphere->setMaterial(__REFLECTIVE__);
+    sphere2->setMaterial(__REFLECTIVE__);
     cone1->setMaterial(__REFLECTIVE__);
     cylinder1->setMaterial(__REFLECTIVE__);
 
     plane1->setTexture(checkerPlaneTexture);
 
-    // camera->translateSelf(vec3(0,0,-50));
-    // camera->rotate(vec3(0,440,0), camera->right, -45);
-    // camera->rotate(vec3(0,440,0), vec3(0,0,1), 45);
+    camera->translateSelf(vec3(0,0,-50));
+    camera->rotate(vec3(0,440,0), camera->right, -45);
+    camera->rotate(vec3(0,440,0), vec3(0,0,1), 45);
 
     scene.render(10, 1, "image.bmp");
     clock_t end = clock();

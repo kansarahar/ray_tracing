@@ -17,13 +17,13 @@ Material::Material(int type): type(type) {
         albedo = 1;
 
         k_a = 0;
-        k_d = 0;
+        k_d = 1;
         k_s = 1;
         alpha = 20;
 
         fraction_reflected = 0;
-        fraction_refracted = 0.9;
-        ior = 1.0;
+        fraction_refracted = 1;
+        ior = 1.3;
     }
     else {
         type = __DIFFUSE__;

@@ -24,7 +24,7 @@ class Scene {
         void render(unsigned ray_depth, unsigned jitters, std::string image_name);
     
     private:
-        vec3 _castRay(unsigned depth, Ray &ray, Light *&light);
+        vec3 _castRay(unsigned depth, Ray ray, Light *&light);
 };
 
 #endif

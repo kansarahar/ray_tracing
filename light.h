@@ -10,7 +10,7 @@ class Light {
 
         virtual ~Light() { };
 
-        virtual vec3 illuminate(Ray &source_ray, const std::vector<Surface *>& surfaces) = 0;
+        virtual vec3 illuminate(const Ray &source_ray, const std::vector<Surface *>& surfaces) = 0;
 };
 
 class AmbientLight: public Light {
@@ -19,7 +19,7 @@ class AmbientLight: public Light {
         AmbientLight(vec3 color, double intensity);
         ~AmbientLight();
 
-        vec3 illuminate(Ray &source_ray, const std::vector<Surface *> &surfaces);
+        vec3 illuminate(const Ray &source_ray, const std::vector<Surface *> &surfaces);
 };
 
 class DirectionalLight: public Light {
@@ -30,7 +30,7 @@ class DirectionalLight: public Light {
         DirectionalLight(vec3 direction, vec3 color, double intensity);
         ~DirectionalLight();
 
-        vec3 illuminate(Ray &source_ray, const std::vector<Surface *> &surfaces);
+        vec3 illuminate(const Ray &source_ray, const std::vector<Surface *> &surfaces);
 };
 
 class PointLight: public Light {
@@ -45,7 +45,7 @@ class PointLight: public Light {
         ~PointLight();
 
         inline void show() { this->showing = true; };
-        vec3 illuminate(Ray &source_ray, const std::vector<Surface *> &surfaces);
+        vec3 illuminate(const Ray &source_ray, const std::vector<Surface *> &surfaces);
 };
 
 

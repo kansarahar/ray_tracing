@@ -28,17 +28,23 @@ bool Sphere::hit(Ray &ray) {
                 return false;
             }
         }
-        this->_t = t;
+        if (ray.hit_surface == nullptr || t < ray.t) {
+            ray.hit_surface = this;
+            ray.t = t;
+        }
         return true;
     }
     return false;
 }
 
 void Sphere::calculateValues(Ray &ray) {
-    _normal = (ray.at(_t)-_center).unit();
-    _outer_surface_normal = _normal;
-    if (dot(ray.direction, _normal) > 0) { _normal = -1*_normal; }
-    _color = this->texture.getColor(ray.at(_t), _center, _up, _right, _cross);
+    ray.is_outside_surface = true;
+    ray.hit_surface_normal = (ray.at(ray.t)-_center).unit();
+    if (dot(ray.direction, ray.hit_surface_normal) > 0) { 
+        ray.is_outside_surface = false;
+        ray.hit_surface_normal = -1*ray.hit_surface_normal; 
+    }
+    _color = this->texture.getColor(ray.at(ray.t), _center, _up, _right, _cross);
 }
 
 
@@ -74,18 +80,24 @@ bool Cylinder::hit(Ray &ray) {
         }
         height = dot(ray.at(t)-_center, _up);
         if (height > this->_height || height < 0) { return false; }
-        this->_t = t;
+        if (ray.hit_surface == nullptr || t < ray.t) {
+            ray.hit_surface = this;
+            ray.t = t;
+        }
         return true;
     }
     return false;
 }
 
 void Cylinder::calculateValues(Ray &ray) {
-    vec3 r = ray.at(_t) - _center;
-    _normal = (r - dot(r, _up)*_up).unit();
-    _outer_surface_normal = _normal;
-    if (dot(ray.direction, _normal) > 0) { _normal = -1*_normal; }
-    _color = this->texture.getColor(ray.at(_t), _center, _up, _right, _cross);
+    ray.is_outside_surface = true;
+    vec3 r = ray.at(ray.t) - _center;
+    ray.hit_surface_normal = (r - dot(r, _up)*_up).unit();
+    if (dot(ray.direction, ray.hit_surface_normal) > 0) { 
+        ray.is_outside_surface = false;
+        ray.hit_surface_normal = -1*ray.hit_surface_normal; 
+    }
+    _color = this->texture.getColor(ray.at(ray.t), _center, _up, _right, _cross);
 }
 
 
@@ -123,19 +135,25 @@ bool Cone::hit(Ray &ray) {
         }
         height = dot(ray.at(t)-_center, _up);
         if (height > this->_height || height < 0) { return false; }
-        this->_t = t;
+        if (ray.hit_surface == nullptr || t < ray.t) {
+            ray.hit_surface = this;
+            ray.t = t;
+        }
         return true;
     }
     return false;
 }
 
 void Cone::calculateValues(Ray &ray) {
-    vec3 r = ray.at(_t) - _center;
+    ray.is_outside_surface = true;
+    vec3 r = ray.at(ray.t) - _center;
     vec3 s = (r - dot(r, _up)*_up).unit();
-    _normal = (s - (_tan_angle*_up)).unit();
-    _outer_surface_normal = _normal;
-    if (dot(ray.direction, _normal) > 0) { _normal = -1*_normal; }
-    _color = this->texture.getColor(ray.at(_t), _center, _up, _right, _cross);
+    ray.hit_surface_normal = (s - (_tan_angle*_up)).unit();
+    if (dot(ray.direction, ray.hit_surface_normal) > 0) { 
+        ray.is_outside_surface = false;
+        ray.hit_surface_normal = -1*ray.hit_surface_normal; 
+    }
+    _color = this->texture.getColor(ray.at(ray.t), _center, _up, _right, _cross);
 }
 
 
@@ -157,8 +175,6 @@ Plane::Plane(vec3 center, vec3 normal) {
         _cross = cross(_up, _right).unit();
         _right = cross(_cross, _up);
     }
-
-    _outer_surface_normal = _normal;
 }
 
 bool Plane::hit(Ray &ray) {
@@ -166,20 +182,27 @@ bool Plane::hit(Ray &ray) {
     if (denom == 0) { return false; }
     double t = dot(_up, _center-ray.origin)/denom;
     if (t > 1e-10) {
-        this->_t = t;
+        if (ray.hit_surface == nullptr || t < ray.t) {
+            ray.hit_surface = this;
+            ray.t = t;
+        }
         return true;
     }
     return false;
 }
 
 void Plane::calculateValues(Ray &ray) {
-    if (dot(ray.direction, _normal) > 0) { _normal = -1*_normal; }
-    _color = this->texture.getColor(ray.at(_t), _center, _up, _right, _cross);
+    ray.is_outside_surface = true;
+    ray.hit_surface_normal = _normal;
+    if (dot(ray.direction, _normal) > 0) {
+        ray.is_outside_surface = false; 
+        ray.hit_surface_normal = -1*_normal;
+    }
+    _color = this->texture.getColor(ray.at(ray.t), _center, _up, _right, _cross);
 }
 
 void Plane::rotateSelf(const vec3 &axis, double angle) {
     _normal.rotate(axis, angle);
-    _outer_surface_normal.rotate(axis, angle);
     _up.rotate(axis, angle);
     _right.rotate(axis, angle);
     _cross.rotate(axis, angle);
@@ -197,7 +220,6 @@ Triangle::Triangle(vec3 v0, vec3 v1, vec3 v2):
     _right = (v1-v0).unit();
     _cross = cross(_up, _right).unit();
 
-    _outer_surface_normal = _up;
 }
 
 bool Triangle::hit(Ray &ray) {
@@ -206,7 +228,6 @@ bool Triangle::hit(Ray &ray) {
     if (denom == 0) { return false; }
     double t = dot(_up, _center-ray.origin)/denom;
     if (t > 1e-10) {
-        _t = t;
         vec3 point = ray.at(t) - _v0;
         double u = dot(cross(_v1 - _v0, point), _up)/2/_area;
         if (u > 0) { 
@@ -215,6 +236,10 @@ bool Triangle::hit(Ray &ray) {
                 this->_u = u;
                 this->_v = v;
                 this->_w = 1-u-v;
+                if (ray.hit_surface == nullptr || t < ray.t) {
+                    ray.hit_surface = this;
+                    ray.t = t;
+                }
                 return true;
             }
         }
@@ -223,11 +248,13 @@ bool Triangle::hit(Ray &ray) {
 }
 
 void Triangle::calculateValues(Ray &ray) {
+    ray.is_outside_surface = true;
+    ray.hit_surface_normal = _normal;
     if (dot(ray.direction, _normal) > 0) {
-        _normal = -1*_normal;
-        _normal_unnormalized = -1*_normal_unnormalized;
+        ray.is_outside_surface = false;
+        ray.hit_surface_normal = -1*_normal;
     }
-    _color = this->texture.getColor(ray.at(_t), _center, _up, _right, _cross);
+    _color = this->texture.getColor(ray.at(ray.t), _center, _up, _right, _cross);
 }
 
 void Triangle::translateSelf(const vec3 &translation) {
@@ -239,7 +266,6 @@ void Triangle::translateSelf(const vec3 &translation) {
 
 void Triangle::rotateSelf(const vec3 &axis, double angle) {
     _normal.rotate(axis, angle);
-    _outer_surface_normal.rotate(axis, angle);
     _up.rotate(axis, angle);
     _right.rotate(axis, angle);
     _cross.rotate(axis, angle);
@@ -251,7 +277,6 @@ void Triangle::rotateSelf(const vec3 &axis, double angle) {
 
 void Triangle::rotate(const vec3 &point, const vec3 &axis, double angle) {
     _normal.rotate(axis, angle);
-    _outer_surface_normal.rotate(axis, angle);
     _up.rotate(axis, angle);
     _right.rotate(axis, angle);
     _cross.rotate(axis, angle);

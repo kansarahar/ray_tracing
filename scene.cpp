@@ -10,7 +10,7 @@ Scene::~Scene() {
     delete this->lights;
 }
 
-vec3 Scene::_castRay(unsigned depth, Ray &ray, Light *&light) {
+vec3 Scene::_castRay(unsigned depth, Ray ray, Light *&light) {
     if (depth == 0) { return vec3(); }
     ray.trace(*(this->surfaces));
     if (ray.hit_surface != nullptr) {
@@ -25,7 +25,7 @@ vec3 Scene::_castRay(unsigned depth, Ray &ray, Light *&light) {
 
         if (material.type == __REFLECTIVE__) {
             vec3 self_color = light->illuminate(ray, *(this->surfaces));
-            Ray reflected_ray = Ray(ray.at(surface->t()*0.999999), ray.direction.reflect(surface->normal()));
+            Ray reflected_ray = Ray(ray.at(ray.t*0.999999), ray.direction.reflect(ray.hit_surface_normal));
             vec3 reflected_color = _castRay(depth-1, reflected_ray, light);
             return material.albedo * (self_color*(1-material.fraction_reflected) + reflected_color*material.fraction_reflected);
         }
@@ -33,11 +33,11 @@ vec3 Scene::_castRay(unsigned depth, Ray &ray, Light *&light) {
         if (material.type == __REFRACTIVE__) {
             vec3 self_color = light->illuminate(ray, *(this->surfaces));
             Ray refracted_ray;
-            if (surface->outside(ray)) {
-                refracted_ray = Ray(ray.at(surface->t()*1.000001), ray.direction.refract(surface->normal(), 1, material.ior));
+            if (ray.is_outside_surface) {
+                refracted_ray = Ray(ray.at(ray.t*1.000001), ray.direction.refract(ray.hit_surface_normal, 1, material.ior));
             }
             else {
-                refracted_ray = Ray(ray.at(surface->t()*1.000001), ray.direction.refract(surface->normal(), material.ior, 1));
+                refracted_ray = Ray(ray.at(ray.t*1.000001), ray.direction.refract(ray.hit_surface_normal, material.ior, 1));
             }
             vec3 refracted_color = _castRay(depth-1, refracted_ray, light);
             return material.albedo * (self_color*(1-material.fraction_refracted) + refracted_color*material.fraction_refracted);

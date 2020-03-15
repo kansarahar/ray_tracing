@@ -20,10 +20,7 @@ class Surface {
 
         virtual ~Surface() { };
         virtual bool hit(Ray &ray) = 0;
-        virtual bool outside(Ray &ray) { return dot(ray.direction, _outer_surface_normal) < 0; }
 
-        inline double t() { return this->_t; };
-        inline vec3 normal() { return this->_normal; };
         inline virtual vec3 color() { return this->_color; };
         virtual void calculateValues(Ray &ray) = 0;
 
@@ -42,7 +39,6 @@ class Surface {
 
 
     protected: 
-        double _t;
         vec3 _normal;
         vec3 _color;
         vec3 _center;
@@ -51,8 +47,6 @@ class Surface {
         vec3 _up;
         vec3 _right;
         vec3 _cross;
-
-        vec3 _outer_surface_normal;
 };
 
 

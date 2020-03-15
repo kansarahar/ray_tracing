@@ -72,14 +72,19 @@ class Surface; // forward declaration
 
 class Ray {
     public:
+        double t;
+
         vec3 origin;
         vec3 direction;
+
         Surface* hit_surface;
+        vec3 hit_surface_normal;
+        bool is_outside_surface;
 
         Ray();
         Ray(vec3 origin, vec3 direction);
 
-        vec3 at(double t) const { return this->origin + t*this->direction; };
+        vec3 at(double s) const { return origin + s*direction; };
         void trace(const std::vector<Surface *> &surfaces_array);
         
         std::string to_string();

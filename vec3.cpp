@@ -43,17 +43,13 @@ std::string quaternion::to_string() { return "(" + std::to_string(this->r) + ", 
 
 
 
-Ray::Ray(): origin(vec3()), direction(vec3(0,0,-1)), hit_surface(nullptr) { }
-Ray::Ray(vec3 origin, vec3 direction): origin(origin), direction(direction), hit_surface(nullptr) { }
+Ray::Ray(): t(0), origin(vec3()), direction(vec3(0,0,-1)), hit_surface(nullptr), hit_surface_normal(vec3()), is_outside_surface(true) { }
+Ray::Ray(vec3 origin, vec3 direction): t(0), origin(origin), direction(direction), hit_surface(nullptr), hit_surface_normal(vec3()), is_outside_surface(true) { }
 
 void Ray::trace(const std::vector<Surface *> &surfaces_array) {
     for (unsigned i = 0; i < surfaces_array.size(); i++) {
         Surface *surface = surfaces_array[i];
-        if (surface->hit(*this)) {
-            if (this->hit_surface == nullptr || this->hit_surface->t() > surface->t()) {
-                this->hit_surface = surface;
-            }
-        }
+        surface->hit(*this);
     }
 };
 

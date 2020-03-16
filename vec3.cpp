@@ -28,8 +28,8 @@ vec3 vec3::refract(const vec3 &unit_normal, const double &ni, const double &nt) 
     double eta = ni/nt;
     double k = 1-eta*eta*(1-cosi*cosi);
     if (k < 0) { return this->reflect(unit_normal); }
-    vec3 ret = eta*I+(eta*cosi-sqrt(k))*unit_normal;
-    return ret;
+    return eta*I+(eta*cosi-sqrt(k))*unit_normal;
+
 }
 
 

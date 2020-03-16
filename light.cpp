@@ -30,7 +30,7 @@ vec3 DirectionalLight::illuminate(const Ray &source_ray, const std::vector<Surfa
     Ray shadow_ray = Ray(hit_point, -1*this->direction);
     shadow_ray.trace(surfaces);
     if (shadow_ray.hit_surface == nullptr) {
-        vec3 diffuse_color = surface->color()*this->intensity*dot(shadow_ray.direction.unit(), shadow_ray.hit_surface_normal.unit());
+        vec3 diffuse_color = surface->color()*this->intensity*dot(shadow_ray.direction.unit(), source_ray.hit_surface_normal.unit());
         if (diffuse_color < 0) { diffuse_color = vec3(); }
 
         vec3 spec_color = vec3();

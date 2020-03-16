@@ -54,11 +54,11 @@ void Scene::render(unsigned ray_depth=1, unsigned jitters=1, std::string image_n
             Light* light = (*lights)[k];
             for (unsigned i = 0; i < camera->screen->height_px; i++) {
                 for (unsigned j = 0; j < camera->screen->width_px; j++) {
-                    Ray ray = camera->castRay(j, i);
+                    Ray ray = camera->castInitialRay(j, i);
                     if (jitters > 1) {
                         double jitter_i = (rand()%100)/100.0;
                         double jitter_j = (rand()%100)/100.0;
-                        ray = camera->castRay(j+jitter_j, i+jitter_i);
+                        ray = camera->castInitialRay(j+jitter_j, i+jitter_i);
                     }
                     vec3 color = _castRay(ray_depth, ray, light);
                     camera->screen->image_arr[i][j][0] += color.a/jitters;

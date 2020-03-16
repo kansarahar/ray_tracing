@@ -70,7 +70,7 @@ void Camera::rotate(const vec3 &point, const vec3 &axis, double angle) {
     this->rotateSelf(axis, angle);
 }
 
-Ray Camera::castRay(double screen_x_pixel, double screen_y_pixel) {
+Ray Camera::castInitialRay(double screen_x_pixel, double screen_y_pixel) {
     // resolution = pixels / unit length
     double x_dist = (screen_x_pixel-this->screen->width_px/2.0)/this->screen->resolution;
     double y_dist = (this->screen->height_px/2.0-screen_y_pixel)/this->screen->resolution;
@@ -97,11 +97,11 @@ void Camera::saveBMP(std::string name) {
         return;
     }
 
-    /*Write headers*/
+    // Write headers
     fwrite(&bfh, 1, sizeof(bfh), file);
     fwrite(&bih, 1, sizeof(bih), file);
 
-    /*Write bitmap*/
+    // Write bitmap
     for (int y = bih.bi_height-1; y >= 0; y--) { 
         for (int x = 0; x < int(bih.bi_width); x++) { 
 

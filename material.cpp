@@ -23,7 +23,7 @@ Material::Material(int type): type(type) {
 
         fraction_reflected = 0;
         fraction_refracted = 1;
-        ior = 1.3;
+        ior = 1.1;
     }
     else {
         type = __DIFFUSE__;

@@ -38,12 +38,15 @@ class Camera {
         );
         ~Camera();
 
+        // move the camera
         void translateSelf(const vec3 &translation) { this->center += translation; };
         void rotateSelf(const vec3 &axis, double angle);
         void rotate(const vec3 &point, const vec3 &axis, double angle);
 
-        Ray castRay(double screen_x_pixel, double screen_y_pixel);
+        // shoot a ray through the screen
+        Ray castInitialRay(double screen_x_pixel, double screen_y_pixel);
 
+        // save the screen's image_arr to an image
         void saveBMP(std::string name);
         void savePPM(std::string name);
 };
